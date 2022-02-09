@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: backend-service
+  template:
+    metadata:
+      labels:
+        component: backend-service
+    spec:
+      restartPolicy: Always
+      imagePullSecrets:
+        - name: matap-registry
+      containers:
+        - name: backend-service
+          image: 'matap-registry-matap-prd.apps.ir-thr-at1.arvan.run/matap-backend:latest'
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: 128M
+              cpu: 200m
+              ephemeral-storage: 300M
+            requests:
+              memory: 128M
+              cpu: 200m
+              ephemeral-storage: 300M
+          env:
+            - name: ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: environment-configs
+                  key: ENV
+            - name: PUBLIC_URL_DEV
+              valueFrom:
+                configMapKeyRef:
+                  name: environment-configs
+                  key: PUBLIC_URL_DEV
+            - name: PUBLIC_URL_PRD
+              valueFrom:
+                configMapKeyRef:
+                  name: environment-configs
+                  key: PUBLIC_URL_PRD
+            - name: TZ
+              value: Asia/Tehran

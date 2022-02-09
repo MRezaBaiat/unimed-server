@@ -1,0 +1,153 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: route-nginx-deployment
+  labels:
+    component: route-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: route-nginx
+  template:
+    metadata:
+      labels:
+        component: route-nginx
+    spec:
+      volumes:
+        - name: var-cache
+        - name: etc
+        - name: var-log
+        - name: var-run
+        - name: nginx-config
+          configMap:
+            name: nginx-config
+      containers:
+        - name: route-nginx
+          image: nginx:latest
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+            - mountPath: /etc
+              name: etc
+            - mountPath: /var/cache/nginx/
+              name: var-cache
+            - mountPath: /var/log/nginx/
+              name: var-log
+            - mountPath: /var/run/
+              name: var-run
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          resources:
+            limits:
+              memory: 128M
+              cpu: 200m
+              ephemeral-storage: 100M
+            requests:
+              memory: 128M
+              cpu: 200m
+              ephemeral-storage: 100M
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: route-nginx-ip-service
+spec:
+  type: ClusterIP
+  selector:
+    component: route-nginx
+  ports:
+    - port: 80
+      targetPort: 80
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+data:
+  nginx.conf: |
+    events {}
+    http {
+         limit_req_zone $binary_remote_addr zone=ip_limit:10m rate=3r/s;
+         server {
+           listen       80;
+
+
+               location /live/admin {
+                    proxy_read_timeout 86400s;
+                    proxy_send_timeout 86400s;
+                    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                    proxy_set_header Host $host;
+                    proxy_http_version 1.1;
+                    proxy_set_header Upgrade $http_upgrade;
+                    proxy_set_header Connection "upgrade";
+                    proxy_pass http://live-cluster-ip-service:7071;
+
+                    limit_req zone=ip_limit burst=5;
+               }
+
+               location /live {
+                    proxy_read_timeout 86400s;
+                    proxy_send_timeout 86400s;
+                    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                    proxy_set_header Host $host;
+                    proxy_http_version 1.1;
+                    proxy_set_header Upgrade $http_upgrade;
+                    proxy_set_header Connection "upgrade";
+                    proxy_pass http://live-cluster-ip-service:7070;
+
+                    limit_req zone=ip_limit burst=5;
+               }
+
+                location /api {
+                    client_max_body_size 5M;
+                    rewrite  ^/api/(.*) /$1 break;
+                    proxy_pass http://api-cluster-ip-service:5001/;
+
+                    limit_req zone=ip_limit burst=5;
+                }
+
+                location /chatfiles {
+                    client_max_body_size 50M;
+                    rewrite  ^/chatfiles/(.*) /$1 break;
+                    proxy_pass http://chatfiles-cluster-ip-service:5005/;
+
+                    limit_req zone=ip_limit burst=5;
+                }
+
+                location /call {
+                    rewrite  ^/call/(.*) /$1 break;
+                    proxy_pass http://call-cluster-ip-service:5006/;
+
+                    limit_req zone=ip_limit burst=5;
+                }
+
+                location /files {
+                    limit_except GET OPTIONS {
+                            deny  all;
+                    }
+                    rewrite  ^/files/(.*) /$1 break;
+                    proxy_pass http://files-cluster-ip-service:5004/;
+
+                    limit_req zone=ip_limit burst=5;
+                }
+
+                location /admin {
+                    client_max_body_size 5M;
+                    rewrite  ^/admin/(.*) /$1 break;
+                    proxy_pass http://admins-cluster-ip-service:5007/;
+
+                    limit_req zone=ip_limit burst=5;
+                }
+
+                location /mongo {
+                    rewrite  ^/mongo/(.*) /$1 break;
+                    proxy_pass http://mongo-express-cluster-ip-service:5012/;
+
+                    limit_req zone=ip_limit burst=5;
+                 }
+           }
+     }
+

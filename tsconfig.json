@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "module": "commonjs",
+    "declaration": false,
+    "removeComments": true,
+    "esModuleInterop": true,
+    "allowJs": true,
+    "noImplicitAny": false,
+    "resolveJsonModule": true,
+    "lib": ["es6"],
+    "strict": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es6",
+    "sourceMap": false,
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "typeRoots": [
+      "../../node_modules/@types"
+    ],
+    "paths": {
+      "*/": [
+        "node_modules/*"
+      ]
+    }
+  },
+  "compileOnSave": true,
+  "include": [
+    "**/*.ts",
+    "**/*.pem"
+  ],
+  "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
+}

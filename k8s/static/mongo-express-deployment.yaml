@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-express-deployment
+  labels:
+    component: mongo-express
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: mongo-express
+  template:
+    metadata:
+      labels:
+        component: mongo-express
+    spec:
+      containers:
+        - name: mongo-express
+          image: mongo-express
+          resources:
+            limits:
+              memory: 128M
+              cpu: 200m
+              ephemeral-storage: 100M
+            requests:
+              memory: 128M
+              cpu: 200m
+              ephemeral-storage: 100M
+          ports:
+            - containerPort: 8081
+          env:
+            - name: ME_CONFIG_BASICAUTH_USERNAME
+              value: 'shekarchian@gmail.com'
+            - name: ME_CONFIG_BASICAUTH_PASSWORD
+              value: 'Caps8643!'
+            - name: ME_CONFIG_MONGODB_ENABLE_ADMIN
+              value: 'true'
+            - name: ME_CONFIG_MONGODB_AUTH_DATABASE
+              value: 'admin'
+            - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+              value: 'admin'
+            - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongopassword
+                  key: MONGOPASS
+            - name: ME_CONFIG_MONGODB_SERVER
+              value: mongodb-cluster-ip-service
+            - name: ME_CONFIG_MONGODB_PORT
+              value: '27017'
+            - name: ME_CONFIG_MONGODB_AUTH_USERNAME
+              value: admin
+            - name: ME_CONFIG_MONGODB_AUTH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongopassword
+                  key: MONGOPASS
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mongopassword
+stringData:
+  MONGOPASS: admin
