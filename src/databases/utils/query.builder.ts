@@ -57,6 +57,7 @@ export default class QueryBuilder<M> extends DataQueryBuilder<M> {
     const { skip, limit, projection, populations, sort } = query;
     const { db } = this;
     // @ts-ignore
+    // eslint-disable-next-line no-undef
     const options: mongoose.PaginateOptions = {
       projection: projection,
       populate: populations,
@@ -70,7 +71,7 @@ export default class QueryBuilder<M> extends DataQueryBuilder<M> {
 
     return (
       db
-        // @ts-ignore
+      // @ts-ignore
         .paginate(query.condition, options)
         .then((res) => {
           return {
@@ -125,7 +126,9 @@ export default class QueryBuilder<M> extends DataQueryBuilder<M> {
         if (err) {
           return reject(err);
         }
-        resolve(data.toObject());
+        const obj = data.toObject();
+        obj._id = String(obj._id);
+        resolve(obj);
       });
     });
   }

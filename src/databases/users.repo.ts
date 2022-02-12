@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel, SchemaFactory } from '@nestjs/mongoose';
-import { QueryResponse, ResponseTime, User, UserType } from 'matap-api';
+import { QueryResponse, ResponseTime, User, UserType } from 'api';
 import { Document, Model } from 'mongoose';
 import QueryBuilder from './utils/query.builder';
 import SearchQuery from './utils/search.query';
@@ -34,7 +34,6 @@ export const UserSchema = SchemaFactory.createForClass(User)
   .plugin(mongoosePaginate)
   .pre(['find', 'findOne', 'findOneAndUpdate'], function () {
     // should not be arrow function
-    // @ts-ignore
     this.lean();
   });
 
@@ -95,9 +94,9 @@ export default class UsersRepo {
     }
 
     return condition
-      .project(projection || { _id: 1, name: 1, creationDate: 1, mobile: 1, ready: 1, type: 1, imageUrl: 1, code: 1, 'details.response_days': 1, specialization: 1, price: 1 })
+      .project(projection || { _id: 1, name: 1, createdAt: 1, mobile: 1, ready: 1, type: 1, imageUrl: 1, code: 1, 'details.response_days': 1, specialization: 1, price: 1 })
       .populate(populations || ['specialization'])
-      .sort(sort || { creationDate: -1 })
+      .sort(sort || { createdAt: -1 })
       .skip(skip)
       .limit(limit)
       .query();
@@ -109,12 +108,12 @@ export default class UsersRepo {
       .project({ 'details.response_days': 1 })
       .findOne();
     // eslint-disable-next-line camelcase
-    const { response_days } = doctor.details;
+    const { responseDays } = doctor.details;
     const now = new Date();
     const nowTime = now.getTime();
     const day = now.getDay();
     let time;
-    response_days[String(day)].map((responseTime: ResponseTime) => {
+    responseDays[String(day)].map((responseTime: ResponseTime) => {
       const fromDate = new Date();
       const toDate = new Date();
       fromDate.setHours(Number(responseTime.from.hour), Number(responseTime.from.minute), 0, 0);

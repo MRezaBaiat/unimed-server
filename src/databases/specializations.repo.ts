@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel, SchemaFactory } from '@nestjs/mongoose/';
 import { Document, Model } from 'mongoose';
-import { QueryResponse, Specialization } from 'matap-api';
+import { QueryResponse, Specialization } from 'api';
 import QueryBuilder from './utils/query.builder';
 import SearchQuery from './utils/search.query';
 import { addWhiteListFilter } from './utils';
@@ -13,7 +13,6 @@ export const SpecializationSchema = SchemaFactory.createForClass(Specialization)
   .plugin(mongoosePaginate)
   .pre(['find', 'findOne', 'findOneAndUpdate'], function () {
     // should not be arrow function
-    // @ts-ignore
     this.lean();
   });
 

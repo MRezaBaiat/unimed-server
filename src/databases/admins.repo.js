@@ -28,10 +28,10 @@ exports.AdminsSchema = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose/");
 const mongoose_2 = require("mongoose");
-const matap_api_1 = require("matap-api");
+const api_1 = require("api");
 const query_builder_1 = __importDefault(require("./utils/query.builder"));
 const mongoosePaginate = require('mongoose-paginate-v2');
-exports.AdminsSchema = mongoose_1.SchemaFactory.createForClass(matap_api_1.Admin)
+exports.AdminsSchema = mongoose_1.SchemaFactory.createForClass(api_1.Admin)
     .plugin(mongoosePaginate)
     .pre(['find', 'findOne', 'findOneAndUpdate'], function () {
     this.lean();
@@ -57,7 +57,7 @@ let AdminsRepo = class AdminsRepo {
         });
     }
     crud() {
-        return new query_builder_1.default(this.adminsDB, matap_api_1.Admin);
+        return new query_builder_1.default(this.adminsDB, api_1.Admin);
     }
 };
 AdminsRepo = __decorate([

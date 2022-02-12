@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel, SchemaFactory } from '@nestjs/mongoose';
-import { QueryResponse, Transaction } from 'matap-api';
+import { QueryResponse, Transaction } from 'api';
 import { Document, Model } from 'mongoose';
 import QueryBuilder from './utils/query.builder';
 import InternalServerError from '../errors/internal-server-error';
-import {addWhiteListFilter, isValidObjectId, ObjectId} from './utils';
+import { addWhiteListFilter, isValidObjectId, ObjectId } from './utils';
 
 const mongoosePaginate = require('mongoose-paginate-v2');
 
 class TransactionsQueryBuilder extends QueryBuilder<Transaction> {
   async create (data: Partial<Transaction>): Promise<Transaction> {
-    if (data.visit_id) {
-      const duplicate = await this.where({ type: data.type, visit_id: data.visit_id })
+    if (data.visitId) {
+      const duplicate = await this.where({ type: data.type, visit_id: data.visitId })
         .findOne();
       if (duplicate) {
         throw new InternalServerError('duplicate transaction of type ' + data.type);
@@ -26,7 +26,6 @@ export const TransactionSchema = SchemaFactory.createForClass(Transaction)
   .plugin(mongoosePaginate)
   .pre(['find', 'findOne', 'findOneAndUpdate'], function () {
     // should not be arrow function
-    // @ts-ignore
     this.lean();
   });
 

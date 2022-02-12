@@ -11,8 +11,6 @@ import { LockModule } from './modules/lock/lock.module';
 import { SocketModule } from './modules/socket/socket.module';
 import { FilesModule } from './modules/files/files.module';
 import { WebapiModule } from './modules/webapi/webapi.module';
-import { ReservationsModule } from './modules/reservations/reservations.module';
-import { MedicalServicesModule } from './modules/medicalservices/medical.services.module';
 import { HealthCentersModule } from './modules/healthcenters/health.centers.module';
 import { GatewayModule } from './modules/gateway/gateway.module';
 import { DiscountsModule } from './modules/discounts/discounts.module';
@@ -42,14 +40,12 @@ import { ScheduleModule } from '@nestjs/schedule';
     SocketModule,
     DatabaseModule,
     NotificationsModule,
-    ReservationsModule,
     FilesModule,
     UsersModule,
     VisitsModule,
     HealthCentersModule,
     SurveysModule,
     WebapiModule,
-    MedicalServicesModule,
     TransactionsModule,
     GatewayModule,
     DiscountsModule,

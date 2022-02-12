@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel, SchemaFactory } from '@nestjs/mongoose/';
 import { Document, Model } from 'mongoose';
-import { CrashReport } from 'matap-api';
+import { CrashReport } from 'api';
 import QueryBuilder from './utils/query.builder';
 
 const mongoosePaginate = require('mongoose-paginate-v2');
@@ -11,7 +11,6 @@ export const CrashSchema = SchemaFactory.createForClass(CrashReport)
   .plugin(mongoosePaginate)
   .pre(['find', 'findOne', 'findOneAndUpdate'], function () {
     // should not be arrow function
-    // @ts-ignore
     this.lean();
   });
 

@@ -23,8 +23,6 @@ const lock_module_1 = require("./modules/lock/lock.module");
 const socket_module_1 = require("./modules/socket/socket.module");
 const files_module_1 = require("./modules/files/files.module");
 const webapi_module_1 = require("./modules/webapi/webapi.module");
-const reservations_module_1 = require("./modules/reservations/reservations.module");
-const medical_services_module_1 = require("./modules/medicalservices/medical.services.module");
 const health_centers_module_1 = require("./modules/healthcenters/health.centers.module");
 const gateway_module_1 = require("./modules/gateway/gateway.module");
 const discounts_module_1 = require("./modules/discounts/discounts.module");
@@ -56,14 +54,12 @@ AppModule = __decorate([
             socket_module_1.SocketModule,
             database_module_1.DatabaseModule,
             notifications_module_1.NotificationsModule,
-            reservations_module_1.ReservationsModule,
             files_module_1.FilesModule,
             users_module_1.UsersModule,
             visits_module_1.VisitsModule,
             health_centers_module_1.HealthCentersModule,
             surveys_module_1.SurveysModule,
             webapi_module_1.WebapiModule,
-            medical_services_module_1.MedicalServicesModule,
             transactions_module_1.TransactionsModule,
             gateway_module_1.GatewayModule,
             discounts_module_1.DiscountsModule,

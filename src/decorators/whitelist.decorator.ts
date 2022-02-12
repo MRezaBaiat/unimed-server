@@ -1,5 +1,5 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { Privileges } from 'matap-api';
+import { Privileges } from 'api';
 import AccessDeniedError from '../errors/access-denied-error';
 import { defaultPrivilegeTestFunctionString } from '../utils';
 

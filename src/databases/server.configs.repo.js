@@ -18,10 +18,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ServerConfigsSchema = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
-const matap_api_1 = require("matap-api");
+const api_1 = require("api");
 const mongoose_2 = require("mongoose");
 const query_builder_1 = __importDefault(require("./utils/query.builder"));
-exports.ServerConfigsSchema = mongoose_1.SchemaFactory.createForClass(matap_api_1.ServerConfig).pre(['find', 'findOne', 'findOneAndUpdate'], function () {
+exports.ServerConfigsSchema = mongoose_1.SchemaFactory.createForClass(api_1.ServerConfig).pre(['find', 'findOne', 'findOneAndUpdate'], function () {
     this.lean();
 });
 let ServerConfigsRepo = class ServerConfigsRepo {
@@ -91,7 +91,7 @@ let ServerConfigsRepo = class ServerConfigsRepo {
         });
     }
     crud() {
-        return new query_builder_1.default(this.configsDB, matap_api_1.ServerConfig);
+        return new query_builder_1.default(this.configsDB, api_1.ServerConfig);
     }
     getConfigs() {
         return this.configsDB.findOne({});

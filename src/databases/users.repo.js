@@ -27,7 +27,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserSchema = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
-const matap_api_1 = require("matap-api");
+const api_1 = require("api");
 const mongoose_2 = require("mongoose");
 const query_builder_1 = __importDefault(require("./utils/query.builder"));
 const mongoosePaginate = require('mongoose-paginate-v2');
@@ -60,7 +60,7 @@ class UserQueryBuilder extends query_builder_1.default {
         });
     }
 }
-exports.UserSchema = mongoose_1.SchemaFactory.createForClass(matap_api_1.User)
+exports.UserSchema = mongoose_1.SchemaFactory.createForClass(api_1.User)
     .plugin(mongoosePaginate)
     .pre(['find', 'findOne', 'findOneAndUpdate'], function () {
     this.lean();
@@ -119,9 +119,9 @@ let UsersRepo = class UsersRepo {
                 !isNaN(search) && condition.orWhere({ code: Number(search) });
             }
             return condition
-                .project(projection || { _id: 1, name: 1, creationDate: 1, mobile: 1, ready: 1, type: 1, imageUrl: 1, code: 1, 'details.response_days': 1, specialization: 1, price: 1 })
+                .project(projection || { _id: 1, name: 1, createdAt: 1, mobile: 1, ready: 1, type: 1, imageUrl: 1, code: 1, 'details.response_days': 1, specialization: 1, price: 1 })
                 .populate(populations || ['specialization'])
-                .sort(sort || { creationDate: -1 })
+                .sort(sort || { createdAt: -1 })
                 .skip(skip)
                 .limit(limit)
                 .query();
@@ -130,15 +130,15 @@ let UsersRepo = class UsersRepo {
     getDoctorCurrentResponseTime(id, fromOffset = 0) {
         return __awaiter(this, void 0, void 0, function* () {
             const doctor = yield this.crud().withId(id)
-                .where({ type: matap_api_1.UserType.DOCTOR })
+                .where({ type: api_1.UserType.DOCTOR })
                 .project({ 'details.response_days': 1 })
                 .findOne();
-            const { response_days } = doctor.details;
+            const { responseDays } = doctor.details;
             const now = new Date();
             const nowTime = now.getTime();
             const day = now.getDay();
             let time;
-            response_days[String(day)].map((responseTime) => {
+            responseDays[String(day)].map((responseTime) => {
                 const fromDate = new Date();
                 const toDate = new Date();
                 fromDate.setHours(Number(responseTime.from.hour), Number(responseTime.from.minute), 0, 0);
@@ -164,7 +164,7 @@ let UsersRepo = class UsersRepo {
             .updateOne();
     }
     crud() {
-        return new UserQueryBuilder(this.usersDB, matap_api_1.User);
+        return new UserQueryBuilder(this.usersDB, api_1.User);
     }
 };
 UsersRepo = __decorate([

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel, SchemaFactory } from '@nestjs/mongoose/';
 import { Document, Model } from 'mongoose';
-import { HealthCenter, QueryResponse } from 'matap-api';
+import { HealthCenter, QueryResponse } from 'api';
 import QueryBuilder from './utils/query.builder';
 import {addWhiteListFilter, isValidObjectId, nameFilter, ObjectId} from './utils';
 
@@ -12,7 +12,6 @@ export const HealthCentersSchema = SchemaFactory.createForClass(HealthCenter)
   .plugin(mongoosePaginate)
   .pre(['find', 'findOne', 'findOneAndUpdate'], function () {
     // should not be arrow function
-    // @ts-ignore
     this.lean();
   });
 

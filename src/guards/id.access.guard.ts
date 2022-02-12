@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { Request } from '../modules';
-import { Privileges, PrivilegeOptions } from 'matap-api';
+import { Privileges, PrivilegeOptions } from 'api';
 import { defaultPrivilegeTestFunctionString } from '../utils';
 import AccessDeniedError from '../errors/access-denied-error';
 
@@ -18,6 +18,7 @@ class Guard implements CanActivate {
     const options: PrivilegeOptions = privileges[this.type];
     const method = request.method.toLowerCase();
     const details = options[method];
+    // eslint-disable-next-line no-eval
     details.test = eval(details.test || privileges.defaultTestFunction || defaultPrivilegeTestFunctionString);
     if (!details.test(options, request)) {
       throw new AccessDeniedError('You do not have enough privileges to do so!');

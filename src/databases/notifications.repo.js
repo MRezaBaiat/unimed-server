@@ -19,10 +19,10 @@ exports.NotificationSchema = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose/");
 const mongoose_2 = require("mongoose");
-const matap_api_1 = require("matap-api");
+const api_1 = require("api");
 const query_builder_1 = __importDefault(require("./utils/query.builder"));
 const mongoosePaginate = require('mongoose-paginate-v2');
-exports.NotificationSchema = mongoose_1.SchemaFactory.createForClass(matap_api_1.Notification)
+exports.NotificationSchema = mongoose_1.SchemaFactory.createForClass(api_1.Notification)
     .plugin(mongoosePaginate)
     .pre(['find', 'findOne', 'findOneAndUpdate'], function () {
     this.lean();
@@ -32,7 +32,7 @@ let NotificationsRepo = class NotificationsRepo {
         this.notificationsDB = notificationsDB;
     }
     crud() {
-        return new query_builder_1.default(this.notificationsDB, matap_api_1.Notification);
+        return new query_builder_1.default(this.notificationsDB, api_1.Notification);
     }
 };
 NotificationsRepo = __decorate([

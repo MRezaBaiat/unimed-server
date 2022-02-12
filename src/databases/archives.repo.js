@@ -19,10 +19,10 @@ exports.ArchiveSchema = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose/");
 const mongoose_2 = require("mongoose");
-const matap_api_1 = require("matap-api");
+const api_1 = require("api");
 const query_builder_1 = __importDefault(require("./utils/query.builder"));
 const mongoosePaginate = require('mongoose-paginate-v2');
-exports.ArchiveSchema = mongoose_1.SchemaFactory.createForClass(matap_api_1.Archive)
+exports.ArchiveSchema = mongoose_1.SchemaFactory.createForClass(api_1.Archive)
     .plugin(mongoosePaginate)
     .pre(['find', 'findOne', 'findOneAndUpdate'], function () {
     this.lean();
@@ -32,7 +32,7 @@ let ArchivesRepo = class ArchivesRepo {
         this.archivesDB = archivesDB;
     }
     crud() {
-        return new query_builder_1.default(this.archivesDB, matap_api_1.Archive);
+        return new query_builder_1.default(this.archivesDB, api_1.Archive);
     }
 };
 ArchivesRepo = __decorate([

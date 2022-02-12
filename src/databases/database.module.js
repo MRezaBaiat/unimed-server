@@ -32,10 +32,7 @@ const users_repo_1 = __importStar(require("./users.repo"));
 const server_configs_repo_1 = __importStar(require("./server.configs.repo"));
 const visits_repo_1 = __importStar(require("./visits.repo"));
 const transactions_repo_1 = __importStar(require("./transactions.repo"));
-const reservations_repo_1 = __importStar(require("./reservations.repo"));
 const admins_repo_1 = __importStar(require("./admins.repo"));
-const medical_services_repo_1 = __importStar(require("./medical.services.repo"));
-const service_requests_repo_1 = __importStar(require("./service.requests.repo"));
 const health_centers_repo_1 = __importStar(require("./health.centers.repo"));
 const discounts_repo_1 = __importStar(require("./discounts.repo"));
 const crashes_repo_1 = __importStar(require("./crashes.repo"));
@@ -57,17 +54,8 @@ const visitModel = mongoose_1.MongooseModule.forFeature([
 const transactionModel = mongoose_1.MongooseModule.forFeature([
     { name: 'transactions', schema: transactions_repo_1.TransactionSchema }
 ]);
-const reservationsModel = mongoose_1.MongooseModule.forFeature([
-    { name: 'reservations', schema: reservations_repo_1.ReservationsSchema }
-]);
 const adminsModel = mongoose_1.MongooseModule.forFeature([
     { name: 'admins', schema: admins_repo_1.AdminsSchema }
-]);
-const medicalServicesModel = mongoose_1.MongooseModule.forFeature([
-    { name: 'medical_services', schema: medical_services_repo_1.MedicalServicesSchema }
-]);
-const serviceRequestsModel = mongoose_1.MongooseModule.forFeature([
-    { name: 'service_requests', schema: service_requests_repo_1.ServiceRequestsSchema }
 ]);
 const healthCentersModel = mongoose_1.MongooseModule.forFeature([
     { name: 'healthcenters', schema: health_centers_repo_1.HealthCentersSchema }
@@ -101,10 +89,10 @@ let DatabaseModule = class DatabaseModule {
 DatabaseModule = __decorate([
     (0, common_1.Global)(),
     (0, common_1.Module)({
-        imports: [fileInfoModel, adminLogModel, callModel, notificationModel, specializationModel, archivesModel, crashesModel, discountsModel, healthCentersModel, userModel, serverConfigsModel, visitModel, transactionModel, reservationsModel, adminsModel, medicalServicesModel, serviceRequestsModel],
+        imports: [fileInfoModel, adminLogModel, callModel, notificationModel, specializationModel, archivesModel, crashesModel, discountsModel, healthCentersModel, userModel, serverConfigsModel, visitModel, transactionModel, adminsModel],
         controllers: [],
-        providers: [files_repo_1.default, admin_logs_repo_1.default, calls_repo_1.default, notifications_repo_1.default, specializations_repo_1.default, archives_repo_1.default, crashes_repo_1.default, discounts_repo_1.default, health_centers_repo_1.default, service_requests_repo_1.default, medical_services_repo_1.default, admins_repo_1.default, transactions_repo_1.default, visits_repo_1.default, users_repo_1.default, server_configs_repo_1.default, reservations_repo_1.default],
-        exports: [files_repo_1.default, admin_logs_repo_1.default, calls_repo_1.default, notifications_repo_1.default, specializations_repo_1.default, archives_repo_1.default, crashes_repo_1.default, discounts_repo_1.default, health_centers_repo_1.default, service_requests_repo_1.default, medical_services_repo_1.default, admins_repo_1.default, reservations_repo_1.default, transactions_repo_1.default, visits_repo_1.default, users_repo_1.default, server_configs_repo_1.default]
+        providers: [files_repo_1.default, admin_logs_repo_1.default, calls_repo_1.default, notifications_repo_1.default, specializations_repo_1.default, archives_repo_1.default, crashes_repo_1.default, discounts_repo_1.default, health_centers_repo_1.default, admins_repo_1.default, transactions_repo_1.default, visits_repo_1.default, users_repo_1.default, server_configs_repo_1.default],
+        exports: [files_repo_1.default, admin_logs_repo_1.default, calls_repo_1.default, notifications_repo_1.default, specializations_repo_1.default, archives_repo_1.default, crashes_repo_1.default, discounts_repo_1.default, health_centers_repo_1.default, admins_repo_1.default, transactions_repo_1.default, visits_repo_1.default, users_repo_1.default, server_configs_repo_1.default]
     })
 ], DatabaseModule);
 exports.DatabaseModule = DatabaseModule;

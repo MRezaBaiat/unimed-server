@@ -28,11 +28,11 @@ exports.SpecializationSchema = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose/");
 const mongoose_2 = require("mongoose");
-const matap_api_1 = require("matap-api");
+const api_1 = require("api");
 const query_builder_1 = __importDefault(require("./utils/query.builder"));
 const utils_1 = require("./utils");
 const mongoosePaginate = require('mongoose-paginate-v2');
-exports.SpecializationSchema = mongoose_1.SchemaFactory.createForClass(matap_api_1.Specialization)
+exports.SpecializationSchema = mongoose_1.SchemaFactory.createForClass(api_1.Specialization)
     .plugin(mongoosePaginate)
     .pre(['find', 'findOne', 'findOneAndUpdate'], function () {
     this.lean();
@@ -57,7 +57,7 @@ let SpecializationsRepo = class SpecializationsRepo {
         });
     }
     crud() {
-        return new query_builder_1.default(this.specializationDB, matap_api_1.Specialization);
+        return new query_builder_1.default(this.specializationDB, api_1.Specialization);
     }
 };
 SpecializationsRepo = __decorate([

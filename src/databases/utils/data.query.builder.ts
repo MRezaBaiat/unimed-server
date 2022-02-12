@@ -1,4 +1,3 @@
-// @ts-ignore
 import {
   FilterQuery,
   RootQuerySelector,
@@ -202,7 +201,6 @@ export abstract class DataQueryBuilder<T> {
   public whiteList (whiteList?: string[]) {
     if (whiteList && whiteList.length !== 0) {
       this.andWhere({
-        // @ts-ignore
         _id: {
           $in: whiteList.map((i) => {
             return { _id: i };

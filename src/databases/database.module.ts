@@ -4,10 +4,7 @@ import UsersRepo, { UserSchema } from './users.repo';
 import ServerConfigsRepo, { ServerConfigsSchema } from './server.configs.repo';
 import VisitsRepo, { VisitSchema } from './visits.repo';
 import TransactionsRepo, { TransactionSchema } from './transactions.repo';
-import ReservationsRepo, { ReservationsSchema } from './reservations.repo';
 import AdminsRepo, { AdminsSchema } from './admins.repo';
-import MedicalServicesRepo, { MedicalServicesSchema } from './medical.services.repo';
-import ServiceRequestsRepo, { ServiceRequestsSchema } from './service.requests.repo';
 import HealthCentersRepo, { HealthCentersSchema } from './health.centers.repo';
 import DiscountsRepo, { DiscountSchema } from './discounts.repo';
 import CrashesRepo, { CrashSchema } from './crashes.repo';
@@ -34,20 +31,8 @@ const transactionModel = MongooseModule.forFeature([
   { name: 'transactions', schema: TransactionSchema }
 ]);
 
-const reservationsModel = MongooseModule.forFeature([
-  { name: 'reservations', schema: ReservationsSchema }
-]);
-
 const adminsModel = MongooseModule.forFeature([
   { name: 'admins', schema: AdminsSchema }
-]);
-
-const medicalServicesModel = MongooseModule.forFeature([
-  { name: 'medical_services', schema: MedicalServicesSchema }
-]);
-
-const serviceRequestsModel = MongooseModule.forFeature([
-  { name: 'service_requests', schema: ServiceRequestsSchema }
 ]);
 
 const healthCentersModel = MongooseModule.forFeature([
@@ -88,9 +73,9 @@ const fileInfoModel = MongooseModule.forFeature([
 
 @Global()
 @Module({
-  imports: [fileInfoModel, adminLogModel, callModel, notificationModel, specializationModel, archivesModel, crashesModel, discountsModel, healthCentersModel, userModel, serverConfigsModel, visitModel, transactionModel, reservationsModel, adminsModel, medicalServicesModel, serviceRequestsModel],
+  imports: [fileInfoModel, adminLogModel, callModel, notificationModel, specializationModel, archivesModel, crashesModel, discountsModel, healthCentersModel, userModel, serverConfigsModel, visitModel, transactionModel, adminsModel],
   controllers: [],
-  providers: [FilesRepo, AdminLogsRepo, CallsRepo, NotificationsRepo, SpecializationsRepo, ArchivesRepo, CrashesRepo, DiscountsRepo, HealthCentersRepo, ServiceRequestsRepo, MedicalServicesRepo, AdminsRepo, TransactionsRepo, VisitsRepo, UsersRepo, ServerConfigsRepo, ReservationsRepo],
-  exports: [FilesRepo, AdminLogsRepo, CallsRepo, NotificationsRepo, SpecializationsRepo, ArchivesRepo, CrashesRepo, DiscountsRepo, HealthCentersRepo, ServiceRequestsRepo, MedicalServicesRepo, AdminsRepo, ReservationsRepo, TransactionsRepo, VisitsRepo, UsersRepo, ServerConfigsRepo]
+  providers: [FilesRepo, AdminLogsRepo, CallsRepo, NotificationsRepo, SpecializationsRepo, ArchivesRepo, CrashesRepo, DiscountsRepo, HealthCentersRepo, AdminsRepo, TransactionsRepo, VisitsRepo, UsersRepo, ServerConfigsRepo],
+  exports: [FilesRepo, AdminLogsRepo, CallsRepo, NotificationsRepo, SpecializationsRepo, ArchivesRepo, CrashesRepo, DiscountsRepo, HealthCentersRepo, AdminsRepo, TransactionsRepo, VisitsRepo, UsersRepo, ServerConfigsRepo]
 })
 export class DatabaseModule {}

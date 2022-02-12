@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel, SchemaFactory } from '@nestjs/mongoose/';
 import { Document, Model } from 'mongoose';
-import { DiscountCoupon } from 'matap-api';
+import { DiscountCoupon } from 'api';
 import QueryBuilder from './utils/query.builder';
 
 const mongoosePaginate = require('mongoose-paginate-v2');
@@ -11,7 +11,6 @@ export const DiscountSchema = SchemaFactory.createForClass(DiscountCoupon)
   .plugin(mongoosePaginate)
   .pre(['find', 'findOne', 'findOneAndUpdate'], function () {
     // should not be arrow function
-    // @ts-ignore
     this.lean();
   });
 

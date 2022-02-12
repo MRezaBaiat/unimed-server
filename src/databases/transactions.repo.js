@@ -27,7 +27,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TransactionSchema = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
-const matap_api_1 = require("matap-api");
+const api_1 = require("api");
 const mongoose_2 = require("mongoose");
 const query_builder_1 = __importDefault(require("./utils/query.builder"));
 const internal_server_error_1 = __importDefault(require("../errors/internal-server-error"));
@@ -39,8 +39,8 @@ class TransactionsQueryBuilder extends query_builder_1.default {
             create: { get: () => super.create }
         });
         return __awaiter(this, void 0, void 0, function* () {
-            if (data.visit_id) {
-                const duplicate = yield this.where({ type: data.type, visit_id: data.visit_id })
+            if (data.visitId) {
+                const duplicate = yield this.where({ type: data.type, visit_id: data.visitId })
                     .findOne();
                 if (duplicate) {
                     throw new internal_server_error_1.default('duplicate transaction of type ' + data.type);
@@ -50,7 +50,7 @@ class TransactionsQueryBuilder extends query_builder_1.default {
         });
     }
 }
-exports.TransactionSchema = mongoose_1.SchemaFactory.createForClass(matap_api_1.Transaction)
+exports.TransactionSchema = mongoose_1.SchemaFactory.createForClass(api_1.Transaction)
     .plugin(mongoosePaginate)
     .pre(['find', 'findOne', 'findOneAndUpdate'], function () {
     this.lean();
@@ -88,7 +88,7 @@ let TransactionsRepo = class TransactionsRepo {
         });
     }
     crud() {
-        return new TransactionsQueryBuilder(this.transactionsDB, matap_api_1.Transaction);
+        return new TransactionsQueryBuilder(this.transactionsDB, api_1.Transaction);
     }
 };
 TransactionsRepo = __decorate([

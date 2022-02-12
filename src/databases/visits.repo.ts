@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel, SchemaFactory } from '@nestjs/mongoose';
-import { Chat, QueryResponse, UserType, Visit, VisitStatus } from 'matap-api';
-import { Document, Model } from 'mongoose';
+import { Chat, QueryResponse, UserType, Visit, VisitStatus } from 'api';
+import { Document, Model, Schema } from 'mongoose';
 import QueryBuilder from './utils/query.builder';
 import { addWhiteListFilter, isValidObjectId, nameFilter, ObjectId } from './utils';
 import SearchQuery from './utils/search.query';
 import UsersRepo from './users.repo';
+import { smartDate } from 'javascript-dev-kit/';
 
 const mongoosePaginate = require('mongoose-paginate-v2');
 
@@ -30,7 +31,6 @@ export const VisitSchema = SchemaFactory.createForClass(Visit)
   .plugin(mongoosePaginate)
   .pre(['find', 'findOne', 'findOneAndUpdate'], function () {
     // should not be arrow function
-    // @ts-ignore
     this.lean();
   });
 
@@ -72,7 +72,7 @@ export default class VisitsRepo {
       }
 
       const list: Visit[] = [];
-      for (const id of user.finalizable_visits) {
+      for (const id of user.finalizableVisits) {
         const visit = await this.crud()
           .withId(id as string)
           .project({ __v: 0, conversations: 0 })
@@ -107,7 +107,7 @@ export default class VisitsRepo {
   public async getDoctorQueueList (doctorId: string): Promise<Visit[]> {
     return this.crud()
       .where({ doctor: ObjectId(doctorId), state: VisitStatus.IN_QUEUE })
-      .project({ _id: 1, patient: 1, initiate_date: 1 })
+      .project({ _id: 1, patient: 1, createdAt: 1 })
       .populate(['patient'])
       .findMany();
   }
@@ -117,7 +117,7 @@ export default class VisitsRepo {
     const condition = this.crud()
       .where({ rating: { $ne: undefined } })
       .whiteListFilter(whiteList);
-    dateRange && condition.andWhere([{ initiate_date: { $gte: Number(dateRange.from) } }, { initiate_date: { $lte: Number(dateRange.to) } }]);
+    dateRange && condition.andWhere([{ createdAt: { $gte: smartDate(dateRange.from) } }, { createdAt: { $lte: smartDate(Number(dateRange.to)) } }]);
     doctorsWhitelist && doctorsWhitelist.length !== 0 && condition.andWhere({ doctor: { $in: doctorsWhitelist.map(i => i) } });
     return condition
       .project(query.projection || { _id: 1, rating: 1 })
@@ -144,8 +144,8 @@ export default class VisitsRepo {
     const { userId, targetId, filters, dateRange, doctorsWhiteList } = query;
     if (filters) {
       if (dateRange) {
-        condition.andWhere({ initiate_date: { $gte: Number(dateRange.from) } })
-          .andWhere({ initiate_date: { $lte: Number(dateRange.to) } });
+        condition.andWhere({ createdAt: { $gte: Number(dateRange.from) } })
+          .andWhere({ createdAt: { $lte: Number(dateRange.to) } });
       }
       if (filters.moneyReturned) {
         filters.moneyReturned === 'true' && condition.andWhere({ 'receipt.return_transaction_id': { $ne: null } });
@@ -225,7 +225,7 @@ export default class VisitsRepo {
       .populate(query.populations || ['patient', 'doctor'])
       .skip(query.skip)
       .limit(query.limit)
-      .sort(query.sort || { initiate_date: -1 })
+      .sort(query.sort || { createdAt: -1 })
       .query();
 
     res.uniquePatients = uniquePatients.length;

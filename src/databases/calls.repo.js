@@ -28,10 +28,10 @@ exports.CallSchema = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose/");
 const mongoose_2 = require("mongoose");
-const matap_api_1 = require("matap-api");
+const api_1 = require("api");
 const query_builder_1 = __importDefault(require("./utils/query.builder"));
 const mongoosePaginate = require('mongoose-paginate-v2');
-exports.CallSchema = mongoose_1.SchemaFactory.createForClass(matap_api_1.Conference)
+exports.CallSchema = mongoose_1.SchemaFactory.createForClass(api_1.Conference)
     .plugin(mongoosePaginate)
     .pre(['find', 'findOne', 'findOneAndUpdate'], function () {
     this.lean();
@@ -49,7 +49,7 @@ let CallsRepo = class CallsRepo {
     }
     ;
     crud() {
-        return new query_builder_1.default(this.callsDB, matap_api_1.Conference);
+        return new query_builder_1.default(this.callsDB, api_1.Conference);
     }
 };
 CallsRepo = __decorate([

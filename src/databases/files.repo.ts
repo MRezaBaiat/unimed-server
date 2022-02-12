@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel, SchemaFactory } from '@nestjs/mongoose/';
 import { Document, Model } from 'mongoose';
-import { FileInfo } from 'matap-api';
+import { FileInfo } from 'api';
 import QueryBuilder from './utils/query.builder';
 
 const mongoosePaginate = require('mongoose-paginate-v2');
@@ -11,7 +11,6 @@ export const FileInfoSchema = SchemaFactory.createForClass(FileInfo)
   .plugin(mongoosePaginate)
   .pre(['find', 'findOne', 'findOneAndUpdate'], function () {
     // should not be arrow function
-    // @ts-ignore
     this.lean();
   });
 

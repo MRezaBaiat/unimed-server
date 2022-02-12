@@ -19,10 +19,10 @@ exports.CrashSchema = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose/");
 const mongoose_2 = require("mongoose");
-const matap_api_1 = require("matap-api");
+const api_1 = require("api");
 const query_builder_1 = __importDefault(require("./utils/query.builder"));
 const mongoosePaginate = require('mongoose-paginate-v2');
-exports.CrashSchema = mongoose_1.SchemaFactory.createForClass(matap_api_1.CrashReport)
+exports.CrashSchema = mongoose_1.SchemaFactory.createForClass(api_1.CrashReport)
     .plugin(mongoosePaginate)
     .pre(['find', 'findOne', 'findOneAndUpdate'], function () {
     this.lean();
@@ -32,7 +32,7 @@ let CrashesRepo = class CrashesRepo {
         this.crashesDB = crashesDB;
     }
     crud() {
-        return new query_builder_1.default(this.crashesDB, matap_api_1.CrashReport);
+        return new query_builder_1.default(this.crashesDB, api_1.CrashReport);
     }
 };
 CrashesRepo = __decorate([

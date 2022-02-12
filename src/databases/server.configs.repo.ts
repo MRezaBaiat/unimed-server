@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel, SchemaFactory } from '@nestjs/mongoose';
-import { ServerConfig } from 'matap-api';
+import { ServerConfig } from 'api';
 import { Document, Model } from 'mongoose';
 import QueryBuilder from './utils/query.builder';
 
@@ -9,7 +9,6 @@ export const ServerConfigsSchema = SchemaFactory.createForClass(ServerConfig).pr
   ['find', 'findOne', 'findOneAndUpdate'],
   function () {
     // should not be arrow function
-    // @ts-ignore
     this.lean();
   }
 );

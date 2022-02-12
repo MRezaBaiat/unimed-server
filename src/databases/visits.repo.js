@@ -27,11 +27,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.VisitSchema = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
-const matap_api_1 = require("matap-api");
+const api_1 = require("api");
 const mongoose_2 = require("mongoose");
 const query_builder_1 = __importDefault(require("./utils/query.builder"));
 const utils_1 = require("./utils");
 const users_repo_1 = __importDefault(require("./users.repo"));
+const javascript_dev_kit_1 = require("javascript-dev-kit/");
 const mongoosePaginate = require('mongoose-paginate-v2');
 class VisitQueryBuilder extends query_builder_1.default {
     findOne(cast = false) {
@@ -57,7 +58,7 @@ class VisitQueryBuilder extends query_builder_1.default {
         });
     }
 }
-exports.VisitSchema = mongoose_1.SchemaFactory.createForClass(matap_api_1.Visit)
+exports.VisitSchema = mongoose_1.SchemaFactory.createForClass(api_1.Visit)
     .plugin(mongoosePaginate)
     .pre(['find', 'findOne', 'findOneAndUpdate'], function () {
     this.lean();
@@ -67,7 +68,7 @@ let VisitsRepo = class VisitsRepo {
         this.visitsDB = visitsDB;
         this.usersRepo = usersRepo;
         this.addChat = (_id, chat, delivered, senderUserType) => __awaiter(this, void 0, void 0, function* () {
-            if (senderUserType === matap_api_1.UserType.PATIENT) {
+            if (senderUserType === api_1.UserType.PATIENT) {
                 return this.crud()
                     .withId(_id)
                     .push({ conversations: { chat, delivered } })
@@ -90,7 +91,7 @@ let VisitsRepo = class VisitsRepo {
     findPatienceQueue(userId) {
         return __awaiter(this, void 0, void 0, function* () {
             return this.crud()
-                .where({ patient: (0, utils_1.ObjectId)(userId), state: matap_api_1.VisitStatus.IN_QUEUE })
+                .where({ patient: (0, utils_1.ObjectId)(userId), state: api_1.VisitStatus.IN_QUEUE })
                 .project({ __v: 0, conversations: 0 })
                 .populate(['doctor', 'patient'])
                 .findOne();
@@ -106,7 +107,7 @@ let VisitsRepo = class VisitsRepo {
                 return undefined;
             }
             const list = [];
-            for (const id of user.finalizable_visits) {
+            for (const id of user.finalizableVisits) {
                 const visit = yield this.crud()
                     .withId(id)
                     .project({ __v: 0, conversations: 0 })
@@ -121,8 +122,8 @@ let VisitsRepo = class VisitsRepo {
     findActiveVisit(userId) {
         return __awaiter(this, void 0, void 0, function* () {
             return this.crud()
-                .orWhere({ doctor: (0, utils_1.ObjectId)(userId), state: matap_api_1.VisitStatus.STARTED })
-                .orWhere({ patient: (0, utils_1.ObjectId)(userId), state: matap_api_1.VisitStatus.STARTED })
+                .orWhere({ doctor: (0, utils_1.ObjectId)(userId), state: api_1.VisitStatus.STARTED })
+                .orWhere({ patient: (0, utils_1.ObjectId)(userId), state: api_1.VisitStatus.STARTED })
                 .populate(['doctor', 'patient'])
                 .project({ __v: 0, conversations: 0 })
                 .findOne();
@@ -138,8 +139,8 @@ let VisitsRepo = class VisitsRepo {
     getDoctorQueueList(doctorId) {
         return __awaiter(this, void 0, void 0, function* () {
             return this.crud()
-                .where({ doctor: (0, utils_1.ObjectId)(doctorId), state: matap_api_1.VisitStatus.IN_QUEUE })
-                .project({ _id: 1, patient: 1, initiate_date: 1 })
+                .where({ doctor: (0, utils_1.ObjectId)(doctorId), state: api_1.VisitStatus.IN_QUEUE })
+                .project({ _id: 1, patient: 1, createdAt: 1 })
                 .populate(['patient'])
                 .findMany();
         });
@@ -149,7 +150,7 @@ let VisitsRepo = class VisitsRepo {
         const condition = this.crud()
             .where({ rating: { $ne: undefined } })
             .whiteListFilter(whiteList);
-        dateRange && condition.andWhere([{ initiate_date: { $gte: Number(dateRange.from) } }, { initiate_date: { $lte: Number(dateRange.to) } }]);
+        dateRange && condition.andWhere([{ createdAt: { $gte: (0, javascript_dev_kit_1.smartDate)(dateRange.from) } }, { createdAt: { $lte: (0, javascript_dev_kit_1.smartDate)(Number(dateRange.to)) } }]);
         doctorsWhitelist && doctorsWhitelist.length !== 0 && condition.andWhere({ doctor: { $in: doctorsWhitelist.map(i => i) } });
         return condition
             .project(query.projection || { _id: 1, rating: 1 })
@@ -165,8 +166,8 @@ let VisitsRepo = class VisitsRepo {
             const { userId, targetId, filters, dateRange, doctorsWhiteList } = query;
             if (filters) {
                 if (dateRange) {
-                    condition.andWhere({ initiate_date: { $gte: Number(dateRange.from) } })
-                        .andWhere({ initiate_date: { $lte: Number(dateRange.to) } });
+                    condition.andWhere({ createdAt: { $gte: Number(dateRange.from) } })
+                        .andWhere({ createdAt: { $lte: Number(dateRange.to) } });
                 }
                 if (filters.moneyReturned) {
                     filters.moneyReturned === 'true' && condition.andWhere({ 'receipt.return_transaction_id': { $ne: null } });
@@ -210,7 +211,7 @@ let VisitsRepo = class VisitsRepo {
                         .project({ _id: 1, type: 1 })
                         .findMany();
                     users.map((user) => {
-                        if (user.type === matap_api_1.UserType.PATIENT) {
+                        if (user.type === api_1.UserType.PATIENT) {
                             return { patient: (0, utils_1.ObjectId)(user._id) };
                         }
                         else {
@@ -238,7 +239,7 @@ let VisitsRepo = class VisitsRepo {
                 .populate(query.populations || ['patient', 'doctor'])
                 .skip(query.skip)
                 .limit(query.limit)
-                .sort(query.sort || { initiate_date: -1 })
+                .sort(query.sort || { createdAt: -1 })
                 .query();
             res.uniquePatients = uniquePatients.length;
             res.uniqueDoctors = uniqueDoctors.length;
@@ -246,7 +247,7 @@ let VisitsRepo = class VisitsRepo {
         });
     }
     crud() {
-        return new VisitQueryBuilder(this.visitsDB, matap_api_1.Visit);
+        return new VisitQueryBuilder(this.visitsDB, api_1.Visit);
     }
 };
 VisitsRepo = __decorate([
