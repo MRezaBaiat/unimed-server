@@ -45,8 +45,8 @@ let AppModule = class AppModule {
 AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            schedule_1.ScheduleModule.forRoot(),
             configs_module_1.default,
+            schedule_1.ScheduleModule.forRoot(),
             mongoose_1.MongooseModule.forRoot(process.env.MONGODB_URL),
             redis_module_1.RedisModule,
             auth_module_1.AuthModule,
