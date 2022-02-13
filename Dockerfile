@@ -5,9 +5,10 @@ WORKDIR '/dist'
 COPY /package.json .
 COPY /tsconfig.json .
 COPY /yarn.lock .
-RUN yarn install --production
+COPY .env.stage.prd .
+RUN yarn install
 ARG CACHEBUST=1
-RUN yarn upgrade api
+RUN yarn upgrade matap-api
 
 COPY src ./src
 
