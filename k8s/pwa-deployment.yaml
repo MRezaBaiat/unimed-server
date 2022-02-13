@@ -14,10 +14,10 @@ spec:
     spec:
       restartPolicy: Always
       imagePullSecrets:
-        - name: matap-registry
+        - name: unimed-registry
       containers:
         - name: pwa-service
-          image: 'matap-registry-matap-prd.apps.ir-thr-at1.arvan.run/matap-pwa:latest'
+          image: 'unimed-registry-unimed.apps.ir-thr-at1.arvan.run/unimed-pwa:latest'
           imagePullPolicy: Always
           resources:
             limits:

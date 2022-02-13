@@ -26,13 +26,13 @@ export default class ServerConfigsRepo {
         android: {
           versionCode: '1.0',
           changeLog: 'no change',
-          downloadLink: 'www.matap.com',
+          downloadLink: 'www.unimed.com',
           forceUpdate: false
         },
         ios: {
           versionCode: '1.0',
           changeLog: 'no change',
-          downloadLink: 'www.matap.com',
+          downloadLink: 'www.unimed.com',
           forceUpdate: false
         },
         retryThreshold: 2000,

@@ -7,7 +7,7 @@ const path = require('path');
 
 const services = {
   'backend-service': {
-    imageName: 'matap-backend',
+    imageName: 'unimed-backend',
     deploymentName: 'backend-deployment',
     component: 'backend-service',
     deploymentFile: '/home/rb/Desktop/projects/matap-server-nestjs/k8s/backend-deployment.yaml',
@@ -15,7 +15,7 @@ const services = {
     context: '/home/rb/Desktop/projects/matap-server-nestjs'
   },
   adminpanel: {
-    imageName: 'matap-adminpanel',
+    imageName: 'unimed-adminpanel',
     deploymentName: 'adminpanel-deployment',
     component: 'adminpanel-service',
     deploymentFile: '/home/rb/Desktop/projects/matap-server-nestjs/k8s/adminpanel-deployment.yaml',
@@ -23,7 +23,7 @@ const services = {
     context: '/home/rb/Desktop/projects/matap-admin'
   },
   pwa: {
-    imageName: 'matap-pwa',
+    imageName: 'unimed-pwa',
     deploymentName: 'pwa-deployment',
     component: 'pwa-service',
     deploymentFile: '/home/rb/Desktop/projects/matap-server-nestjs/k8s/pwa-deployment.yaml',
@@ -60,12 +60,12 @@ const functions = {
     if (!imageName) {
       throw new Error('name is empty!');
     }
-    const imageTag = `matap-registry-matap-prd.apps.ir-thr-at1.arvan.run/${imageName}:latest`;
+    const imageTag = `unimed-registry-unimed.apps.ir-thr-at1.arvan.run/${imageName}:latest`;
     console.log('image name ' + imageName);
     const context = service.context;
     const dockerfile = service.root + '/Dockerfile';
     console.log('building with tag ' + imageTag + ', and file ' + path.dirname(dockerfile));
-    await this.execute('arvan', 'paas project matap-prd', true);
+    await this.execute('arvan', 'paas project unimed', true);
     await this.execute('cd', `${context} && docker build -f ${dockerfile} -t ${imageTag} --build-arg CACHEBUST=$(date +%s) .`, true);
     await this.execute('docker', `push ${imageTag}`, true);
     await this.execute('arvan', 'paas delete deployment ' + service.deploymentName, true).catch(err => {});

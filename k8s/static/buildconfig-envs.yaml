@@ -3,6 +3,6 @@ kind: ConfigMap
 metadata:
   name: environment-configs
 data:
-  PUBLIC_URL_DEV : 'https://www.matap-dev.com'
-  PUBLIC_URL_PRD : 'https://www.matap.site'
+  PUBLIC_URL_DEV : 'https://www.azdanaz.az'
+  PUBLIC_URL_PRD : 'https://www.azdanaz.az'
   ENV: 'PRD'

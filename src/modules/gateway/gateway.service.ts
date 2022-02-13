@@ -20,9 +20,9 @@ export class GatewayService {
   constructor (private smsService: SmsService, private transactionsService: TransactionsService, private usersRepo: UsersRepo) {}
 
   public async verifyDepositTransaction (amount: number, Authority: string, user: User, res?: Response, os?: string) {
-    let redirectUrl = 'matap://paymentdone/profile';
+    let redirectUrl = 'unimed://paymentdone/profile';
     if (os && os === 'web') {
-      redirectUrl = 'https://pwa.matap.site';
+      redirectUrl = 'https://pwa.azdanaz.az';
     }
     redirectUrl = `${process.env.PAYMENT_DONE_URL}?call=${redirectUrl}&os=${os}`;
     return depositZarinpal.PaymentVerification({

@@ -14,10 +14,10 @@ spec:
     spec:
       restartPolicy: Always
       imagePullSecrets:
-        - name: matap-registry
+        - name: unimed-registry
       containers:
         - name: backend-service
-          image: 'matap-registry-matap-prd.apps.ir-thr-at1.arvan.run/matap-backend:latest'
+          image: 'unimed-registry-unimed.apps.ir-thr-at1.arvan.run/unimed-backend:latest'
           imagePullPolicy: Always
           resources:
             limits:

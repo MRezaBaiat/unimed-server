@@ -7,7 +7,7 @@ import { addWhiteListFilter } from '../../databases/utils';
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount as any),
-  databaseURL: 'https://matap-test.firebaseio.com'
+  databaseURL: 'https://unimed.firebaseio.com'
 });
 
 interface NotificationProps{
@@ -127,7 +127,7 @@ export default class PushNotificationService {
         android_channel_id: notification.channelId,
         title: notification.title,
         body: notification.body || '',
-        tag: 'Matap',
+        tag: 'Unimed',
         sound: notification.soundName,
         badge: '0'
       },
@@ -143,7 +143,7 @@ export default class PushNotificationService {
           vibrate: true,
           priority: 'max',
           invokeApp: true,
-          tag: 'Matap',
+          tag: 'Unimed',
           badge: 0,
           playOnForeground: true // TODO remove this in favour of ignoreInForeground
         })
