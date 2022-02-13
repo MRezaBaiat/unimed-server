@@ -44,5 +44,5 @@ spec:
                 configMapKeyRef:
                   name: environment-configs
                   key: PUBLIC_URL_PRD
-            - name: TZ
-              value: Asia/Tehran
+            - name: STAGE
+              value: prd

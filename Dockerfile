@@ -5,8 +5,6 @@ WORKDIR '/dist'
 COPY /package.json .
 COPY /tsconfig.json .
 COPY /yarn.lock .
-RUN git config --global user.name rezabaiat
-RUN git config --global user.password 1Professional1
 RUN yarn install --production
 ARG CACHEBUST=1
 RUN yarn upgrade api

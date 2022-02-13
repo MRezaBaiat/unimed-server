@@ -31,8 +31,8 @@ import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
-    ScheduleModule.forRoot(),
     ConfigsModule,
+    ScheduleModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGODB_URL),
     RedisModule,
     AuthModule,
