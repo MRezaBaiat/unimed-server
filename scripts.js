@@ -10,9 +10,9 @@ const services = {
     imageName: 'unimed-backend',
     deploymentName: 'backend-deployment',
     component: 'backend-service',
-    deploymentFile: '/home/rb/Desktop/projects/matap-server-nestjs/k8s/backend-deployment.yaml',
-    root: '/home/rb/Desktop/projects/matap-server-nestjs/src',
-    context: '/home/rb/Desktop/projects/matap-server-nestjs'
+    deploymentFile: '~/Desktop/projects/unimed-server/k8s/backend-deployment.yaml',
+    root: '~/Desktop/projects/unimed-server',
+    context: '~/Desktop/projects/unimed-server'
   },
   adminpanel: {
     imageName: 'unimed-adminpanel',

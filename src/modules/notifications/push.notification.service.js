@@ -29,7 +29,7 @@ const google_services_json_1 = __importDefault(require("./google-services.json")
 const utils_1 = require("../../databases/utils");
 firebase_admin_1.default.initializeApp({
     credential: firebase_admin_1.default.credential.cert(google_services_json_1.default),
-    databaseURL: 'https://matap-test.firebaseio.com'
+    databaseURL: 'https://unimed.firebaseio.com'
 });
 exports.NOTIFICATION_TYPES = {
     FREE_TEXT_FNC: (title, body, link) => {
@@ -143,7 +143,7 @@ let PushNotificationService = class PushNotificationService {
                 android_channel_id: notification.channelId,
                 title: notification.title,
                 body: notification.body || '',
-                tag: 'Matap',
+                tag: 'Unimed',
                 sound: notification.soundName,
                 badge: '0'
             },
@@ -159,7 +159,7 @@ let PushNotificationService = class PushNotificationService {
                     vibrate: true,
                     priority: 'max',
                     invokeApp: true,
-                    tag: 'Matap',
+                    tag: 'Unimed',
                     badge: 0,
                     playOnForeground: true
                 })

@@ -1,4 +1,4 @@
-FROM node:latest AS BUILD_IMAGE
+FROM node:16.13.2 AS BUILD_IMAGE
 
 WORKDIR '/dist'
 
@@ -13,7 +13,7 @@ RUN yarn upgrade api
 
 COPY src ./src
 
-FROM node:alpine
+FROM node:16.13.2
 
 WORKDIR '/app'
 

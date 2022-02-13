@@ -28,9 +28,6 @@ exports.FilesController = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_auth_guard_1 = require("../../guards/jwt.auth.guard");
 const files_service_1 = require("./files.service");
-const fs_1 = __importDefault(require("fs"));
-const api_1 = require("api");
-const path_1 = __importDefault(require("path"));
 const visits_repo_1 = __importDefault(require("../../databases/visits.repo"));
 const files_repo_1 = __importDefault(require("../../databases/files.repo"));
 const mongoose_1 = require("@nestjs/mongoose/");
@@ -44,61 +41,6 @@ let FilesController = class FilesController {
         this.visitsRepo = visitsRepo;
         this.filesRepo = filesRepo;
         this.connection = connection;
-    }
-    copyProfileImage(userId, url) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const basePath = '/mnt/matap-files/';
-            const url_parts = Url.parse(decodeURIComponent(url), true);
-            const query = url_parts.query.q;
-            const filePath = basePath + query;
-            if (!fs_1.default.existsSync(filePath)) {
-                return;
-            }
-            const stats = fs_1.default.statSync(filePath);
-            if (!stats.isFile()) {
-                return console.log('not a file!');
-            }
-            const filename = path_1.default.parse(filePath).name;
-            const oldUrl = userId + ':::' + url;
-            const exists = yield this.filesRepo.crud().where({ oldUrl: oldUrl }).findOne();
-            if (exists) {
-                return console.log('already exists');
-            }
-            console.log('copying');
-            const file = yield this.filesService.copyFromStream(fs_1.default.createReadStream(filePath), filename, undefined, { fileType: api_1.ChatType.IMAGE }, oldUrl);
-            console.log('copied ', file.url);
-            yield this.usersRepo.crud().withId(userId)
-                .set({ imageUrl: file.url })
-                .updateOne();
-        });
-    }
-    copyChatFile(chat, roomId) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const basePath = '/mnt/matap-files/';
-            const url_parts = Url.parse(decodeURIComponent(chat.url), true);
-            const query = url_parts.query.q;
-            const filePath = basePath + query;
-            if (!fs_1.default.existsSync(filePath)) {
-                return;
-            }
-            const stats = fs_1.default.statSync(filePath);
-            if (!stats.isFile()) {
-                return console.log('not a file!');
-            }
-            const filename = path_1.default.parse(filePath).name;
-            const oldUrl = chat.url + ':::' + chat.id + ':::' + roomId;
-            const exists = yield this.filesRepo.crud().where({ oldUrl: oldUrl }).findOne();
-            if (exists) {
-                return console.log('already exists');
-            }
-            console.log('copying');
-            const file = yield this.filesService.copyFromStream(fs_1.default.createReadStream(filePath), filename, undefined, Object.assign(Object.assign({}, chat.mediaInfo), { roomId: roomId, fileType: chat.type }), oldUrl);
-            console.log('copied ', file.url);
-            yield this.visitsRepo.crud().withId(roomId).where({ 'conversations.chat.id': chat.id })
-                .set({ 'conversations.$.chat.url': file.url })
-                .updateOne();
-            console.log('fixed for visit', roomId);
-        });
     }
     handleGetChatFile(request, response, id) {
         return __awaiter(this, void 0, void 0, function* () {

@@ -29,14 +29,6 @@ spec:
             - name: nginx-config
               mountPath: /etc/nginx/nginx.conf
               subPath: nginx.conf
-            - mountPath: /etc
-              name: etc
-            - mountPath: /var/cache/nginx/
-              name: var-cache
-            - mountPath: /var/log/nginx/
-              name: var-log
-            - mountPath: /var/run/
-              name: var-run
           ports:
             - containerPort: 80
               protocol: TCP

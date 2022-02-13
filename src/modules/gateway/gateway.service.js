@@ -42,9 +42,9 @@ let GatewayService = class GatewayService {
     }
     verifyDepositTransaction(amount, Authority, user, res, os) {
         return __awaiter(this, void 0, void 0, function* () {
-            let redirectUrl = 'matap://paymentdone/profile';
+            let redirectUrl = 'unimed://paymentdone/profile';
             if (os && os === 'web') {
-                redirectUrl = 'https://pwa.matap.site';
+                redirectUrl = 'https://pwa.azdanaz.az';
             }
             redirectUrl = `${process.env.PAYMENT_DONE_URL}?call=${redirectUrl}&os=${os}`;
             return depositZarinpal.PaymentVerification({
