@@ -33,7 +33,13 @@ import { ScheduleModule } from '@nestjs/schedule';
   imports: [
     ConfigsModule,
     ScheduleModule.forRoot(),
-    MongooseModule.forRoot(process.env.MONGODB_URL),
+    MongooseModule.forRoot(process.env.MONGODB_URL, {
+      auth: {
+        username: process.env.MONGODB_USER,
+        password: process.env.MONGODB_PASS
+      },
+      authSource: process.env.MONGODB_AUTH_SOURCE
+    }),
     RedisModule,
     AuthModule,
     LockModule,
