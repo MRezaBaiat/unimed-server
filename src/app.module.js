@@ -47,7 +47,13 @@ AppModule = __decorate([
         imports: [
             configs_module_1.default,
             schedule_1.ScheduleModule.forRoot(),
-            mongoose_1.MongooseModule.forRoot(process.env.MONGODB_URL),
+            mongoose_1.MongooseModule.forRoot(process.env.MONGODB_URL, {
+                auth: {
+                    username: process.env.MONGODB_USER,
+                    password: process.env.MONGODB_PASS
+                },
+                authSource: process.env.MONGODB_AUTH_SOURCE
+            }),
             redis_module_1.RedisModule,
             auth_module_1.AuthModule,
             lock_module_1.LockModule,
