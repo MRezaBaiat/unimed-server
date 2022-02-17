@@ -94,7 +94,7 @@ data:
                }
 
                 location /api {
-                    client_max_body_size 5M;
+                    client_max_body_size 50M;
                     rewrite  ^/api/(.*) /$1 break;
                     proxy_pass http://api-cluster-ip-service:5001/;
 
@@ -127,7 +127,7 @@ data:
                 }
 
                 location /admin {
-                    client_max_body_size 5M;
+                    client_max_body_size 50M;
                     rewrite  ^/admin/(.*) /$1 break;
                     proxy_pass http://admins-cluster-ip-service:5007/;
 
