@@ -8,7 +8,7 @@ COPY /yarn.lock .
 COPY .env.stage.prd .
 RUN yarn install
 ARG CACHEBUST=1
-RUN yarn upgrade matap-api
+RUN yarn upgrade api
 
 COPY src ./src
 

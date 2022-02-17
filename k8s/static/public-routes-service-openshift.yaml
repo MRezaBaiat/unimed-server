@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: Route
+metadata:
+  name: openshift-public-route-prd
+spec:
+  host: www.azdanaz.az
+  to:
+    kind: Service
+    name: route-nginx-ip-service
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Allow
+  port:
+    targetPort: 80
+---
+apiVersion: v1
+kind: Route
+metadata:
+  name: mongo-public-route-prd
+spec:
+  host: mongo.azdanaz.az
+  to:
+    kind: Service
+    name: mongo-express-cluster-ip-service
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Allow
+  port:
+    targetPort: 8081
+---
+apiVersion: v1
+kind: Route
+metadata:
+  name: adminpanel-public-route-prd
+spec:
+  host: admin.azdanaz.az
+  to:
+    kind: Service
+    name: adminpanel-cluster-ip-service
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Allow
+  port:
+    targetPort: 80
+---
+apiVersion: v1
+kind: Route
+metadata:
+  name: pwa-public-route-prd
+spec:
+  host: pwa.azdanaz.az
+  to:
+    kind: Service
+    name: pwa-cluster-ip-service
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Allow
+  port:
+    targetPort: 80
