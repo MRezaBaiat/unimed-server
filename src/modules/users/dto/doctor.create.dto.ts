@@ -14,127 +14,127 @@ import { Type } from 'class-transformer';
 class SpecializationType {
     @IsString()
     @IsNotEmpty()
-    _id: string;
+      _id: string;
 
     @IsString()
     @IsNotEmpty()
-    name: string;
+      name: string;
 }
 
 class NotificationSettings {
     @IsBoolean()
     @IsNotEmpty()
-    notification:boolean;
+      notification:boolean;
 
     @IsBoolean()
     @IsNotEmpty()
-    sms!:boolean
+      sms!:boolean;
 }
 
 class SettingsType {
     @IsNotEmpty()
     @IsObject()
-    notifications: {
+      notifications: {
         newPatient: NotificationSettings,
         workTimeClose: NotificationSettings,
         workTimeEnded: NotificationSettings,
         workTimeStarted: NotificationSettings
-    }
+    };
 }
 
 class ReservationCoordinatesType {
     @IsNumber()
-    lat: number;
+      lat: number;
 
     @IsNumber()
-    lng: number
+      lng: number;
 }
 
 class ReservationInfoDetailsType {
     @IsBoolean()
     @IsNotEmpty()
-    enabled: boolean;
+      enabled: boolean;
 
     @IsString()
     @IsNotEmpty()
-    phone: string;
+      phone: string;
 
     @IsString()
     @IsNotEmpty()
-    address: string;
+      address: string;
 
     @IsNumber()
     @IsNotEmpty()
-    gapMinutes: number;
+      gapMinutes: number;
 
     @IsString()
     @IsNotEmpty()
-    cost: string;
+      cost: string;
 
     @IsOptional()
     @IsObject()
-    coordinates:ReservationCoordinatesType;
+      coordinates:ReservationCoordinatesType;
 
     @IsNotEmpty()
     @IsObject()
-    workTimes: WorkTimes
+      workTimes: WorkTimes;
 }
 
 class DetailsType {
     @IsObject()
     @IsNotEmpty()
-    reservationInfo!: ReservationInfoDetailsType;
+      reservationInfo!: ReservationInfoDetailsType;
 
     @IsString()
     @IsNotEmpty()
-    phone: string;
+      phone: string;
 
     @IsString()
     @IsNotEmpty()
-    address: string;
+      address: string;
 
     @IsBoolean()
     @IsNotEmpty()
-    videoCallAllowed: boolean;
+      videoCallAllowed: boolean;
 
     @IsString()
     @IsNotEmpty()
-    bio: string;
+      bio: string;
 
     @IsBoolean()
     @IsNotEmpty()
-    displayInList: boolean;
+      displayInList: boolean;
 
     @IsNumber()
     @IsNotEmpty()
-    maxVisitDurationMillisec: number;
+      maxVisitDurationMillisec: number;
 
     @IsString()
     @IsNotEmpty()
-    city: string;
+      city: string;
 
     @IsString()
     @IsNotEmpty()
-    shaba:string;
+      shaba:string;
 
     @IsString()
     @IsOptional()
-    nezam_pezeshki_code:string;
+      nezam_pezeshki_code:string;
 
     @IsNumber()
-    cut: number;
+      cut: number;
 
     @IsArray()
     @IsNotEmpty()
-    clinics:string[];
+      clinics:string[];
 
     @IsArray()
     @IsNotEmpty()
-    hospitals:string[];
+      hospitals:string[];
 
     @IsObject()
     @IsNotEmpty()
-    response_days: {
+      response_days: {
         0: ResponseTime[],
         1: ResponseTime[],
         2: ResponseTime[],
@@ -142,45 +142,45 @@ class DetailsType {
         4: ResponseTime[],
         5: ResponseTime[],
         6: ResponseTime[],
-    }
+    };
 }
 
 export default class DoctorCreateDto {
     @IsNotEmpty()
     @IsString()
     @IsMobilePhone()
-    mobile: string;
+      mobile: string;
 
     @IsString()
     @IsNotEmpty()
-    name: string;
+      name: string;
 
     @IsString()
     @IsNotEmpty()
     @Matches(UserType.DOCTOR)
-    type: UserType.DOCTOR;
+      type: UserType.DOCTOR;
 
     @IsNumber()
     @IsNotEmpty()
-    code: number;
+      code: number;
 
     @IsNumber()
     @IsNotEmpty()
-    price: number;
+      price: number;
 
     @IsString()
     @IsNotEmpty()
-    gender: 'male' | 'female' | '';
+      gender: 'male' | 'female' | '';
 
     @IsNotEmpty()
     @Type(() => SpecializationType)
-    specialization: Specialization;
+      specialization: Specialization;
 
     @IsNotEmpty()
     @IsObject()
-    settings: SettingsType;
+      settings: SettingsType;
 
     @IsNotEmpty()
     @IsObject()
-    details:DetailsType;
+      details:DetailsType;
 }
