@@ -21,6 +21,6 @@ COPY --from=BUILD_IMAGE /dist/.env.stage.prd .
 COPY --from=BUILD_IMAGE /dist/node_modules ./node_modules
 COPY --from=BUILD_IMAGE /dist/package.json .
 
-EXPOSE 5000
+EXPOSE 3000
 
 CMD ["node","./src/main.js"]
