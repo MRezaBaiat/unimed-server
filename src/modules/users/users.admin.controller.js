@@ -79,6 +79,7 @@ let UsersAdminController = class UsersAdminController {
     }
     handlePatchUser(body) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log(body);
             if (body.details) {
                 body.details.hospitals = body.details.hospitals.map((h) => (0, utils_1.ObjectId)(h._id));
                 body.details.clinics = body.details.clinics.map((c) => (0, utils_1.ObjectId)(c._id));

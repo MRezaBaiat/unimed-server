@@ -1,16 +1,23 @@
 import 'reflect-metadata';
 import { plainToInstance, plainToClassFromExist } from 'class-transformer';
-import { Query, QueryWithHelpers, UpdateWriteOpResult, Model } from 'mongoose';
+import mongoose, { Query, QueryWithHelpers, UpdateWriteOpResult, Model } from 'mongoose';
 import { DataQueryBuilder } from './data.query.builder';
 import { ObjectId } from './index';
 
 export default class QueryBuilder<M> extends DataQueryBuilder<M> {
-  private readonly metatype: any;
-  private readonly db: Model<any>;
+  private metatype: any;
+  private db: Model<any>;
   constructor (db, metatype) {
     super();
     this.db = db;
     this.metatype = metatype;
+  }
+
+  clone (modifier?: (value: this) => void): this {
+    const c = super.clone(modifier);
+    c.metatype = this.metatype;
+    c.db = this.db;
+    return c;
   }
 
   async findMany (): Promise<M[] | undefined> {
@@ -24,14 +31,25 @@ export default class QueryBuilder<M> extends DataQueryBuilder<M> {
 
     if (res) {
       res.map((r) => {
-        if (r._id) {
-          r._id = String(r._id);
-        }
+        this.convertIdFields(r);
         return r;
       });
     }
     return res;
   }
+
+  private convertIdFields = (object: any) => {
+    if (!object) {
+      return;
+    }
+    Object.keys(object).forEach((key) => {
+      if (key === '_id') {
+        object[key] = String(object[key]);
+      } else if (typeof object[key] === 'object') {
+        this.convertIdFields(object[key]);
+      }
+    });
+  };
 
   async findOne (cast = false): Promise<M | undefined> {
     const query = this.getQuery();
@@ -40,9 +58,10 @@ export default class QueryBuilder<M> extends DataQueryBuilder<M> {
       .sort(query.sort)
       .populate(query.populations);
 
-    if (res && res._id) {
+    res && this.convertIdFields(res);
+    /* if (res && res._id) {
       res._id = String(res._id);
-    }
+    } */
     if (res && cast) {
       res = plainToInstance(this.metatype, res);
     }
@@ -57,7 +76,6 @@ export default class QueryBuilder<M> extends DataQueryBuilder<M> {
     const { skip, limit, projection, populations, sort } = query;
     const { db } = this;
     // @ts-ignore
-    // eslint-disable-next-line no-undef
     const options: mongoose.PaginateOptions = {
       projection: projection,
       populate: populations,
@@ -83,9 +101,7 @@ export default class QueryBuilder<M> extends DataQueryBuilder<M> {
         })
         .then((res) => {
           res.results && res.results.map((obj) => {
-            if (obj._id) {
-              obj._id = String(obj._id);
-            }
+            this.convertIdFields(obj);
             return obj;
           });
           return res;
@@ -113,11 +129,11 @@ export default class QueryBuilder<M> extends DataQueryBuilder<M> {
   }
 
   async deleteOne (): Promise<{ n: number; deletedCount: number; ok: number }> {
-    return this.db.deleteOne(this.getQuery()) as any;
+    return this.db.deleteOne(this.getCondition()) as any;
   }
 
   async deleteMany (): Promise<{ n: number; deletedCount: number; ok: number }> {
-    return this.db.deleteMany(this.getQuery()) as any;
+    return this.db.deleteMany(this.getCondition()) as any;
   }
 
   create (data: Partial<M>): Promise<M> {

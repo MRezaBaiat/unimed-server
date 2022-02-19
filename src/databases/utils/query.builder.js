@@ -16,8 +16,27 @@ const index_1 = require("./index");
 class QueryBuilder extends data_query_builder_1.DataQueryBuilder {
     constructor(db, metatype) {
         super();
+        this.convertIdFields = (object) => {
+            if (!object) {
+                return;
+            }
+            Object.keys(object).forEach((key) => {
+                if (key === '_id') {
+                    object[key] = String(object[key]);
+                }
+                else if (typeof object[key] === 'object') {
+                    this.convertIdFields(object[key]);
+                }
+            });
+        };
         this.db = db;
         this.metatype = metatype;
+    }
+    clone(modifier) {
+        const c = super.clone(modifier);
+        c.metatype = this.metatype;
+        c.db = this.db;
+        return c;
     }
     findMany() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -30,9 +49,7 @@ class QueryBuilder extends data_query_builder_1.DataQueryBuilder {
                 .limit(query.limit);
             if (res) {
                 res.map((r) => {
-                    if (r._id) {
-                        r._id = String(r._id);
-                    }
+                    this.convertIdFields(r);
                     return r;
                 });
             }
@@ -46,9 +63,7 @@ class QueryBuilder extends data_query_builder_1.DataQueryBuilder {
                 .findOne(query.condition, query.projection || { __v: 0 })
                 .sort(query.sort)
                 .populate(query.populations);
-            if (res && res._id) {
-                res._id = String(res._id);
-            }
+            res && this.convertIdFields(res);
             if (res && cast) {
                 res = (0, class_transformer_1.plainToInstance)(this.metatype, res);
             }
@@ -85,9 +100,7 @@ class QueryBuilder extends data_query_builder_1.DataQueryBuilder {
             })
                 .then((res) => {
                 res.results && res.results.map((obj) => {
-                    if (obj._id) {
-                        obj._id = String(obj._id);
-                    }
+                    this.convertIdFields(obj);
                     return obj;
                 });
                 return res;
@@ -112,12 +125,12 @@ class QueryBuilder extends data_query_builder_1.DataQueryBuilder {
     }
     deleteOne() {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.db.deleteOne(this.getQuery());
+            return this.db.deleteOne(this.getCondition());
         });
     }
     deleteMany() {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.db.deleteMany(this.getQuery());
+            return this.db.deleteMany(this.getCondition());
         });
     }
     create(data) {

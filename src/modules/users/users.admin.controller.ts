@@ -70,7 +70,6 @@ export class UsersAdminController {
   @UseGuards(AdminJwtAuthGuard, IdAccessGuard('users', r => r.body._id))
   @Patch('/')
   public async handlePatchUser (@Body() body: User) {
-    console.log(body);
     if (body.details) {
       body.details.hospitals = body.details.hospitals.map((h) => ObjectId(h._id)) as [HealthCenter];
       body.details.clinics = body.details.clinics.map((c) => ObjectId(c._id)) as [HealthCenter];
