@@ -66,7 +66,6 @@ data:
          server {
            listen       80;
 
-
                location /live/admin {
                     proxy_read_timeout 86400s;
                     proxy_send_timeout 86400s;
@@ -96,50 +95,10 @@ data:
                 location /api {
                     client_max_body_size 50M;
                     rewrite  ^/api/(.*) /$1 break;
-                    proxy_pass http://api-cluster-ip-service:5001/;
+                    proxy_pass http://backend-cluster-ip-service:3000/;
 
                     limit_req zone=ip_limit burst=5;
                 }
-
-                location /chatfiles {
-                    client_max_body_size 50M;
-                    rewrite  ^/chatfiles/(.*) /$1 break;
-                    proxy_pass http://chatfiles-cluster-ip-service:5005/;
-
-                    limit_req zone=ip_limit burst=5;
-                }
-
-                location /call {
-                    rewrite  ^/call/(.*) /$1 break;
-                    proxy_pass http://call-cluster-ip-service:5006/;
-
-                    limit_req zone=ip_limit burst=5;
-                }
-
-                location /files {
-                    limit_except GET OPTIONS {
-                            deny  all;
-                    }
-                    rewrite  ^/files/(.*) /$1 break;
-                    proxy_pass http://files-cluster-ip-service:5004/;
-
-                    limit_req zone=ip_limit burst=5;
-                }
-
-                location /admin {
-                    client_max_body_size 50M;
-                    rewrite  ^/admin/(.*) /$1 break;
-                    proxy_pass http://admins-cluster-ip-service:5007/;
-
-                    limit_req zone=ip_limit burst=5;
-                }
-
-                location /mongo {
-                    rewrite  ^/mongo/(.*) /$1 break;
-                    proxy_pass http://mongo-express-cluster-ip-service:5012/;
-
-                    limit_req zone=ip_limit burst=5;
-                 }
            }
      }
 

@@ -13,26 +13,15 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mongodb-cluster-ip-service
+  name: backend-cluster-ip-service
 spec:
   type: ClusterIP
   selector:
-    component: mongodb
+    component: backend-service
   ports:
-    - port: 27017
-      targetPort: 27017
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: api-cluster-ip-service
-spec:
-  type: ClusterIP
-  selector:
-    component: api-service
-  ports:
-    - port: 5001
-      targetPort: 5000
+    - port: 3000
+      targetPort: 3000
+      name: 'http-port'
 ---
 apiVersion: v1
 kind: Service
@@ -45,11 +34,8 @@ spec:
     clientIP:
       timeoutSeconds: 10800
   selector:
-    component: live-service
+    component: backend-service
   ports:
-    - port: 5003
-      targetPort: 5000
-      name: 'cluster-ip-port'
     - port: 7070
       targetPort: 7070
       name: 'clients-websocket-port'
@@ -60,74 +46,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: files-cluster-ip-service
+  name: mongodb-cluster-ip-service
 spec:
   type: ClusterIP
   selector:
-    component: files-service
+    component: mongodb
   ports:
-    - port: 5004
-      targetPort: 5000
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: chatfiles-cluster-ip-service
-spec:
-  type: ClusterIP
-  selector:
-    component: chatfiles-service
-  ports:
-    - port: 5005
-      targetPort: 5000
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: call-cluster-ip-service
-spec:
-  type: ClusterIP
-  selector:
-    component: call-service
-  ports:
-    - port: 5006
-      targetPort: 5000
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: admins-cluster-ip-service
-spec:
-  type: ClusterIP
-  selector:
-    component: admins-service
-  ports:
-    - port: 5007
-      targetPort: 5000
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: timer-cluster-ip-service
-spec:
-  type: ClusterIP
-  selector:
-    component: timer-service
-  ports:
-    - port: 5008
-      targetPort: 5000
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: sms-cluster-ip-service
-spec:
-  type: ClusterIP
-  selector:
-    component: sms-service
-  ports:
-    - port: 5009
-      targetPort: 5000
+    - port: 27017
+      targetPort: 27017
 ---
 apiVersion: v1
 kind: Service
@@ -156,18 +82,6 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: pwa-old-cluster-ip-service
-spec:
-  type: ClusterIP
-  selector:
-    component: pwa-old-service
-  ports:
-    - port: 5011
-      targetPort: 80
----
-apiVersion: v1
-kind: Service
-metadata:
   name: mongo-express-cluster-ip-service
 spec:
   type: ClusterIP
@@ -176,15 +90,3 @@ spec:
   ports:
     - port: 5012
       targetPort: 8081
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: mediasoup-demo-cluster-ip-service
-spec:
-  type: ClusterIP
-  selector:
-    component: mediasoup-demo-service
-  ports:
-    - port: 5013
-      targetPort: 80
