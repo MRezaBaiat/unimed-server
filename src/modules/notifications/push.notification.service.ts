@@ -4,6 +4,7 @@ import admin from 'firebase-admin';
 import serviceAccount from './google-services.json';
 import { Notification, QueryResponse } from 'api';
 import { addWhiteListFilter } from '../../databases/utils';
+import UsersRepo from '../../databases/users.repo';
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount as any),
@@ -72,9 +73,26 @@ export const NOTIFICATION_TYPES = {
 
 @Injectable()
 export default class PushNotificationService {
-  constructor (private notificationsRepo: NotificationsRepo) {}
+  constructor (private notificationsRepo: NotificationsRepo, private usersRepo: UsersRepo) {}
   public async sendNotification (userId: string, notification: NotificationProps, priority = 'high') {
-
+    const user = await this.usersRepo.crud().withId(userId)
+      .project({ fcmtoken: 1 })
+      .findOne();
+    if (!user || !user.fcmtoken) {
+      console.log('push notification', 'user not found ' + userId + ' , or he did not have a fcm token set');
+      return;
+    }
+    console.log('push notification', 'sending push');
+    admin.messaging().sendToDevice([user.fcmtoken], this.generatePayload(notification), {
+      contentAvailable: true,
+      priority
+    })
+      .then((response) => {
+        console.log('Successfully sent message:', response);
+      })
+      .catch((error) => {
+        console.log('Error sending message:', error);
+      });
   }
 
   public async query (skip: number, limit: number, search: string, whiteList?: string[]): Promise<QueryResponse<Notification>> {

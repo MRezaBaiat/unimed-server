@@ -31,8 +31,7 @@ export const TransactionSchema = SchemaFactory.createForClass(Transaction)
 
 @Injectable()
 export default class TransactionsRepo {
-  constructor (@InjectModel('transactions') private transactionsDB: Model<TransactionDocument>) {
-  }
+  constructor (@InjectModel('transactions') private transactionsDB: Model<TransactionDocument>) {}
 
   public async query (userId: string, type: 'user' | 'healthcenter', fromDate: number = 0, toDate: number = Number.MAX_SAFE_INTEGER, skip: number, limit: number, projection: any, search: string | undefined, whiteList?: string[]): Promise<QueryResponse<Transaction>> {
     const condition = this.crud()
