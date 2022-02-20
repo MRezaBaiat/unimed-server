@@ -62,13 +62,13 @@ export default class UsersRepo {
 
   public addWaitingForFinalization = async (userId: string, visitId: string) => {
     return this.crud().withId(userId)
-      .push({ finalizable_visits: String(visitId) })
+      .push({ finalizableVisits: String(visitId) })
       .updateOne();
   };
 
   public removeWaitingForFinalization = async (userId: string, visitId: string) => {
     return this.crud().withId(userId)
-      .pull({ finalizable_visits: String(visitId) })
+      .pull({ finalizableVisits: String(visitId) })
       .updateOne();
   };
 

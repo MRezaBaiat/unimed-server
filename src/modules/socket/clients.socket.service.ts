@@ -79,7 +79,7 @@ export class ClientsSocketService {
       return;
     }
     const finalizableVisits = await this.visitsRepo.findUserFinalizationsList(userId);
-    this.sendEvent(userId, 'finalizable_visits', finalizableVisits);
+    this.sendEvent(userId, 'finalizableVisits', finalizableVisits);
   }
 
   public async signalCall (offer: Conference) {

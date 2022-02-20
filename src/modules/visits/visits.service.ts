@@ -52,7 +52,7 @@ export class VisitsService {
         }
         const user = await this.usersRepo.crud()
           .withId(userId)
-          .where({ type: UserType.DOCTOR, finalizable_visits: { $in: [String(info.visit_id)] } })
+          .where({ type: UserType.DOCTOR, finalizableVisits: { $in: [String(info.visit_id)] } })
           .project({ _id: 1 })
           .findOne();
 
@@ -102,11 +102,6 @@ export class VisitsService {
 
       console.log('discount id setting' + discountId);
 
-      this.smsService.sendSms('09900303910', 'ویزیت', 'call');
-      this.smsService.sendSms('09121154048', 'ویزیت', 'call');
-      this.smsService.sendSms('09900303913', 'ویزیت', 'call');
-      this.smsService.sendSms('09900303919', 'ویزیت', 'call');
-
       await this.visitsRepo.crud().create({
         state: VisitStatus.IN_QUEUE,
         discount: discountId as any,
@@ -137,7 +132,7 @@ export class VisitsService {
         return this.visitsRepo.findUserFinalizationsList(userId);
       }
       const user = await this.usersRepo.crud().withId(userId)
-        .where({ type: UserType.PATIENT, finalizable_visits: { $in: [String(info.visitId)] } })
+        .where({ type: UserType.PATIENT, finalizableVisits: { $in: [String(info.visitId)] } })
         .project({ _id: 1 })
         .findOne();
       if (user) {

@@ -38,65 +38,65 @@ export const VisitSchema = SchemaFactory.createForClass(Visit)
 export default class VisitsRepo {
   constructor (@InjectModel('visits') private visitsDB: Model<VisitDocument>, private usersRepo: UsersRepo) {}
 
-    public addChat = async (_id: string, chat: Chat, delivered: string[], senderUserType: UserType) => {
-      if (senderUserType === UserType.PATIENT) {
-        return this.crud()
-          .withId(_id)
-          .push({ conversations: { chat, delivered } })
-          .set({ chatting: true })
-          .updateOne();
-      } else {
-        return this.crud()
-          .withId(_id)
-          .push({ conversations: { chat, delivered } })
-          .updateOne();
-      }
-    };
-
-    public async findPatienceQueue (userId: string): Promise<Visit> {
+  public addChat = async (_id: string, chat: Chat, delivered: string[], senderUserType: UserType) => {
+    if (senderUserType === UserType.PATIENT) {
       return this.crud()
-        .where({ patient: ObjectId(userId), state: VisitStatus.IN_QUEUE })
+        .withId(_id)
+        .push({ conversations: { chat, delivered } })
+        .set({ chatting: true })
+        .updateOne();
+    } else {
+      return this.crud()
+        .withId(_id)
+        .push({ conversations: { chat, delivered } })
+        .updateOne();
+    }
+  };
+
+  public async findPatienceQueue (userId: string): Promise<Visit> {
+    return this.crud()
+      .where({ patient: ObjectId(userId), state: VisitStatus.IN_QUEUE })
+      .project({ __v: 0, conversations: 0 })
+      .populate(['doctor', 'patient'])
+      .findOne();
+  }
+
+  public async findUserFinalizationsList (userId: string): Promise<Visit[] | undefined> {
+    const user = await this.usersRepo.crud()
+      .withId(userId)
+      .project({ finalizableVisits: 1 })
+      .findOne();
+
+    if (!user) {
+      return undefined;
+    }
+
+    const list: Visit[] = [];
+    for (const id of user.finalizableVisits) {
+      const visit = await this.crud()
+        .withId(id as string)
         .project({ __v: 0, conversations: 0 })
         .populate(['doctor', 'patient'])
         .findOne();
+
+      visit && list.push(visit);
     }
+    return list;
+  };
 
-    public async findUserFinalizationsList (userId: string): Promise<Visit[] | undefined> {
-      const user = await this.usersRepo.crud()
-        .withId(userId)
-        .project({ finalizable_visits: 1 })
-        .findOne();
+  public async findActiveVisit (userId: string): Promise<Visit> {
+    return this.crud()
+      .orWhere({ doctor: ObjectId(userId), state: VisitStatus.STARTED })
+      .orWhere({ patient: ObjectId(userId), state: VisitStatus.STARTED })
+      .populate(['doctor', 'patient'])
+      .project({ __v: 0, conversations: 0 })
+      .findOne();
+  }
 
-      if (!user) {
-        return undefined;
-      }
-
-      const list: Visit[] = [];
-      for (const id of user.finalizableVisits) {
-        const visit = await this.crud()
-          .withId(id as string)
-          .project({ __v: 0, conversations: 0 })
-          .populate(['doctor', 'patient'])
-          .findOne();
-
-        visit && list.push(visit);
-      }
-      return list;
-    };
-
-    public async findActiveVisit (userId: string): Promise<Visit> {
-      return this.crud()
-        .orWhere({ doctor: ObjectId(userId), state: VisitStatus.STARTED })
-        .orWhere({ patient: ObjectId(userId), state: VisitStatus.STARTED })
-        .populate(['doctor', 'patient'])
-        .project({ __v: 0, conversations: 0 })
-        .findOne();
-    }
-
-    public async getConversationsHistory (_id: string) {
-      const visit = await this.crud().withId(_id).project({ conversations: 1 }).findOne();
-      return visit ? visit.conversations.map(c => c.chat) : [];
-    };
+  public async getConversationsHistory (_id: string) {
+    const visit = await this.crud().withId(_id).project({ conversations: 1 }).findOne();
+    return visit ? visit.conversations.map(c => c.chat) : [];
+  };
 
   public setDelivered = async (_id: string, chatId: string, userId: string) => {
     return this.crud().withId(_id).where({ 'conversations.chat.id': chatId })
