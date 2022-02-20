@@ -1,31 +1,31 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export default class PatientPostVisitDto {
     @IsNotEmpty()
     @IsNumber()
-    service_quality: number;
+      serviceQuality: number;
 
     @IsNotEmpty()
     @IsNumber()
-    video_call_satisfaction: number;
+      videoCallSatisfaction: number;
 
     @IsNotEmpty()
     @IsNumber()
-    doctor_details_clearity: number;
+      doctorDetailsClearity: number;
 
     @IsNotEmpty()
     @IsNumber()
-    doctor_solutions: number;
+      doctorSolutions: number;
 
     @IsNotEmpty()
     @IsNumber()
-    doctor_detailed_consequences: number;
+      doctorDetailedConsequences: number;
 
     @IsNotEmpty()
     @IsNumber()
-    environment_details: number;
+      environmentDetails: number;
 
     @IsNotEmpty()
     @IsString()
-    visitId: string;
+      visitId: string;
 }
