@@ -65,7 +65,7 @@ let TimerService = class TimerService {
     }
     checkWorkTimes() {
         return __awaiter(this, void 0, void 0, function* () {
-            const doctors = yield this.usersRepo.crud().where({ type: api_1.UserType.DOCTOR }).project({ _id: 1, name: 1, mobile: 1, code: 1, ready: 1, 'details.response_days': 1, notificationQueuePatients: 1 }).findMany();
+            const doctors = yield this.usersRepo.crud().where({ type: api_1.UserType.DOCTOR }).project({ _id: 1, name: 1, mobile: 1, code: 1, ready: 1, 'details.responseDays': 1, notificationQueuePatients: 1 }).findMany();
             for (const doctor of doctors) {
                 try {
                     const isWorkingTime = (yield this.usersRepo.getDoctorCurrentResponseTime(doctor._id)) !== undefined;

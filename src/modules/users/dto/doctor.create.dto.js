@@ -160,7 +160,7 @@ __decorate([
     (0, class_validator_1.IsObject)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", Object)
-], DetailsType.prototype, "response_days", void 0);
+], DetailsType.prototype, "responseDays", void 0);
 class DoctorCreateDto {
 }
 __decorate([

@@ -40,7 +40,7 @@ class TransactionsQueryBuilder extends query_builder_1.default {
         });
         return __awaiter(this, void 0, void 0, function* () {
             if (data.visitId) {
-                const duplicate = yield this.where({ type: data.type, visit_id: data.visitId })
+                const duplicate = yield this.where({ type: data.type, visitId: data.visitId })
                     .findOne();
                 if (duplicate) {
                     throw new internal_server_error_1.default('duplicate transaction of type ' + data.type);
@@ -65,7 +65,7 @@ let TransactionsRepo = class TransactionsRepo {
                 .andWhere({ date: { $gte: fromDate } })
                 .andWhere({ date: { $lte: toDate } });
             if (search && search !== '') {
-                const $or = [{ tracking_code: search }, { visit_id: search }];
+                const $or = [{ trackingCode: search }, { visitId: search }];
                 if ((0, utils_1.isValidObjectId)(search)) {
                     $or.push({ _id: (0, utils_1.ObjectId)(search) });
                 }

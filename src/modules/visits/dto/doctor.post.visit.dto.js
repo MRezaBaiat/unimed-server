@@ -16,10 +16,10 @@ __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
-], DoctorPostVisitDto.prototype, "visit_id", void 0);
+], DoctorPostVisitDto.prototype, "visitId", void 0);
 __decorate([
     (0, class_validator_1.IsBoolean)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", Boolean)
-], DoctorPostVisitDto.prototype, "return_cost", void 0);
+], DoctorPostVisitDto.prototype, "returnCost", void 0);
 exports.default = DoctorPostVisitDto;

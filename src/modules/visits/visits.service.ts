@@ -39,7 +39,7 @@ export class VisitsService {
 
   public finalizeVisitForDoctor (userId: string, info: DoctorPostVisitDto, alreadyLocked?: boolean) {
     const fn = async () => {
-      const visit = await this.visitsRepo.crud().withId(info.visit_id)
+      const visit = await this.visitsRepo.crud().withId(info.visitId)
         .set({ state: VisitStatus.ENDED })
         .project({ patient: 1, doctor: 1, receipt: 1 })
         .populate(['patient', 'doctor'])
@@ -52,17 +52,17 @@ export class VisitsService {
         }
         const user = await this.usersRepo.crud()
           .withId(userId)
-          .where({ type: UserType.DOCTOR, finalizableVisits: { $in: [String(info.visit_id)] } })
+          .where({ type: UserType.DOCTOR, finalizableVisits: { $in: [String(info.visitId)] } })
           .project({ _id: 1 })
           .findOne();
 
-        if (info.return_cost && user) {
-          await this.returnPaidAmount(info.visit_id, true);
+        if (info.returnCost && user) {
+          await this.returnPaidAmount(info.visitId, true);
         }
         console.log('sending status');
         await this.socketService.sendStatus(visit.doctor._id);
       }
-      await this.usersRepo.removeWaitingForFinalization(userId, info.visit_id);
+      await this.usersRepo.removeWaitingForFinalization(userId, info.visitId);
       return this.visitsRepo.findUserFinalizationsList(userId);
     };
 
@@ -70,7 +70,7 @@ export class VisitsService {
       return fn();
     }
 
-    return this.lockService.lock(info.visit_id, async (locked) => {
+    return this.lockService.lock(info.visitId, async (locked) => {
       if (!locked) {
         return;
       }
@@ -383,7 +383,7 @@ export class VisitsService {
         this.notifyQueues(String(visit.doctor));
 
         if (returnMoney) {
-          await this.finalizeVisitForDoctor(visit.doctor._id, { visit_id: visit._id, return_cost: returnMoney }, true);
+          await this.finalizeVisitForDoctor(visit.doctor._id, { visitId: visit._id, returnCost: returnMoney }, true);
         }
       }
     });

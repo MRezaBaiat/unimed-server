@@ -74,7 +74,7 @@ let VisitsService = class VisitsService {
     }
     finalizeVisitForDoctor(userId, info, alreadyLocked) {
         const fn = () => __awaiter(this, void 0, void 0, function* () {
-            const visit = yield this.visitsRepo.crud().withId(info.visit_id)
+            const visit = yield this.visitsRepo.crud().withId(info.visitId)
                 .set({ state: api_1.VisitStatus.ENDED })
                 .project({ patient: 1, doctor: 1, receipt: 1 })
                 .populate(['patient', 'doctor'])
@@ -86,22 +86,22 @@ let VisitsService = class VisitsService {
                 }
                 const user = yield this.usersRepo.crud()
                     .withId(userId)
-                    .where({ type: api_1.UserType.DOCTOR, finalizableVisits: { $in: [String(info.visit_id)] } })
+                    .where({ type: api_1.UserType.DOCTOR, finalizableVisits: { $in: [String(info.visitId)] } })
                     .project({ _id: 1 })
                     .findOne();
-                if (info.return_cost && user) {
-                    yield this.returnPaidAmount(info.visit_id, true);
+                if (info.returnCost && user) {
+                    yield this.returnPaidAmount(info.visitId, true);
                 }
                 console.log('sending status');
                 yield this.socketService.sendStatus(visit.doctor._id);
             }
-            yield this.usersRepo.removeWaitingForFinalization(userId, info.visit_id);
+            yield this.usersRepo.removeWaitingForFinalization(userId, info.visitId);
             return this.visitsRepo.findUserFinalizationsList(userId);
         });
         if (alreadyLocked) {
             return fn();
         }
-        return this.lockService.lock(info.visit_id, (locked) => __awaiter(this, void 0, void 0, function* () {
+        return this.lockService.lock(info.visitId, (locked) => __awaiter(this, void 0, void 0, function* () {
             if (!locked) {
                 return;
             }
@@ -190,7 +190,7 @@ let VisitsService = class VisitsService {
             }
             const doctor = yield this.usersRepo.crud()
                 .where({ code: doctorCode })
-                .project({ _id: 1, price: 1, name: 1, specialization: 1, ready: 1, 'details.response_days': 1 })
+                .project({ _id: 1, price: 1, name: 1, specialization: 1, ready: 1, 'details.responseDays': 1 })
                 .findOne();
             if (!doctor) {
                 res.error = dictionary_1.default.Strings.DOCTOR_NOT_FOUND[lang];
@@ -372,7 +372,7 @@ let VisitsService = class VisitsService {
                     this.socketService.sendFinalizableVisits(String(visit.doctor));
                     this.notifyQueues(String(visit.doctor));
                     if (returnMoney) {
-                        yield this.finalizeVisitForDoctor(visit.doctor._id, { visit_id: visit._id, return_cost: returnMoney }, true);
+                        yield this.finalizeVisitForDoctor(visit.doctor._id, { visitId: visit._id, returnCost: returnMoney }, true);
                     }
                 }
             }));

@@ -11,7 +11,7 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 class TransactionsQueryBuilder extends QueryBuilder<Transaction> {
   async create (data: Partial<Transaction>): Promise<Transaction> {
     if (data.visitId) {
-      const duplicate = await this.where({ type: data.type, visit_id: data.visitId })
+      const duplicate = await this.where({ type: data.type, visitId: data.visitId })
         .findOne();
       if (duplicate) {
         throw new InternalServerError('duplicate transaction of type ' + data.type);
@@ -40,7 +40,7 @@ export default class TransactionsRepo {
       .andWhere({ date: { $lte: toDate } });
 
     if (search && search !== '') {
-      const $or = [{ tracking_code: search }, { visit_id: search }];
+      const $or = [{ trackingCode: search }, { visitId: search }];
       if (isValidObjectId(search)) {
         $or.push({ _id: ObjectId(search) } as any);
       }
