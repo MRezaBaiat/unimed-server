@@ -134,7 +134,7 @@ class DetailsType {
 
     @IsObject()
     @IsNotEmpty()
-      response_days: {
+      responseDays: {
         0: ResponseTime[],
         1: ResponseTime[],
         2: ResponseTime[],

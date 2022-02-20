@@ -101,7 +101,7 @@ let VisitsRepo = class VisitsRepo {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield this.usersRepo.crud()
                 .withId(userId)
-                .project({ finalizable_visits: 1 })
+                .project({ finalizableVisits: 1 })
                 .findOne();
             if (!user) {
                 return undefined;

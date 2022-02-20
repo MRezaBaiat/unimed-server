@@ -86,7 +86,7 @@ let VisitsService = class VisitsService {
                 }
                 const user = yield this.usersRepo.crud()
                     .withId(userId)
-                    .where({ type: api_1.UserType.DOCTOR, finalizable_visits: { $in: [String(info.visit_id)] } })
+                    .where({ type: api_1.UserType.DOCTOR, finalizableVisits: { $in: [String(info.visit_id)] } })
                     .project({ _id: 1 })
                     .findOne();
                 if (info.return_cost && user) {
@@ -126,10 +126,6 @@ let VisitsService = class VisitsService {
                 return this.socketService.sendEvent(patientUserid, api_1.EventType.EVENT_ERROR, dictionary_1.default.Strings.CURRENCY_LOW.fa);
             }
             console.log('discount id setting' + discountId);
-            this.smsService.sendSms('09900303910', 'ویزیت', 'call');
-            this.smsService.sendSms('09121154048', 'ویزیت', 'call');
-            this.smsService.sendSms('09900303913', 'ویزیت', 'call');
-            this.smsService.sendSms('09900303919', 'ویزیت', 'call');
             yield this.visitsRepo.crud().create({
                 state: api_1.VisitStatus.IN_QUEUE,
                 discount: discountId,
@@ -156,7 +152,7 @@ let VisitsService = class VisitsService {
                     return this.visitsRepo.findUserFinalizationsList(userId);
                 }
                 const user = yield this.usersRepo.crud().withId(userId)
-                    .where({ type: api_1.UserType.PATIENT, finalizable_visits: { $in: [String(info.visitId)] } })
+                    .where({ type: api_1.UserType.PATIENT, finalizableVisits: { $in: [String(info.visitId)] } })
                     .project({ _id: 1 })
                     .findOne();
                 if (user) {

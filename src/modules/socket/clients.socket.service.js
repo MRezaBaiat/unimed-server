@@ -100,7 +100,7 @@ let ClientsSocketService = class ClientsSocketService {
                 return;
             }
             const finalizableVisits = yield this.visitsRepo.findUserFinalizationsList(userId);
-            this.sendEvent(userId, 'finalizable_visits', finalizableVisits);
+            this.sendEvent(userId, 'finalizableVisits', finalizableVisits);
         });
     }
     signalCall(offer) {

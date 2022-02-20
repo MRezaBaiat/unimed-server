@@ -80,12 +80,12 @@ let UsersRepo = class UsersRepo {
         });
         this.addWaitingForFinalization = (userId, visitId) => __awaiter(this, void 0, void 0, function* () {
             return this.crud().withId(userId)
-                .push({ finalizable_visits: String(visitId) })
+                .push({ finalizableVisits: String(visitId) })
                 .updateOne();
         });
         this.removeWaitingForFinalization = (userId, visitId) => __awaiter(this, void 0, void 0, function* () {
             return this.crud().withId(userId)
-                .pull({ finalizable_visits: String(visitId) })
+                .pull({ finalizableVisits: String(visitId) })
                 .updateOne();
         });
     }

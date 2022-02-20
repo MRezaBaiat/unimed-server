@@ -10,19 +10,19 @@ import { GatewayService } from '../gateway/gateway.service';
 @Injectable()
 export class TimerService {
   constructor (private usersRepo: UsersRepo, private gatewayService: GatewayService, private socketService: ClientsSocketService, private eventsService: EventsService, private notificationsService: PushNotificationService) {}
-    private autoModified: string[] = [];
-    private lastNotified: {[key: string]: number}[] = [];
+  private autoModified: string[] = [];
+  private lastNotified: {[key: string]: number}[] = [];
 
     @Cron(CronExpression.EVERY_30_SECONDS)
-    public checkGateways () {
-      this.gatewayService.checkUnverifiedTransactions().then((res) => {
-        // console.log(res);
-      });
-    }
+  public checkGateways () {
+    this.gatewayService.checkUnverifiedTransactions().then((res) => {
+      // console.log(res);
+    });
+  }
 
     @Cron('0 */2 * * * *')
     public async checkWorkTimes () {
-      const doctors = await this.usersRepo.crud().where({ type: UserType.DOCTOR }).project({ _id: 1, name: 1, mobile: 1, code: 1, ready: 1, 'details.response_days': 1, notificationQueuePatients: 1 }).findMany();
+      const doctors = await this.usersRepo.crud().where({ type: UserType.DOCTOR }).project({ _id: 1, name: 1, mobile: 1, code: 1, ready: 1, 'details.responseDays': 1, notificationQueuePatients: 1 }).findMany();
 
       for (const doctor of doctors) {
         try {

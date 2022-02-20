@@ -173,7 +173,7 @@ export class VisitsService {
 
     const doctor = await this.usersRepo.crud()
       .where({ code: doctorCode })
-      .project({ _id: 1, price: 1, name: 1, specialization: 1, ready: 1, 'details.response_days': 1 })
+      .project({ _id: 1, price: 1, name: 1, specialization: 1, ready: 1, 'details.responseDays': 1 })
       .findOne();
 
     if (!doctor) {

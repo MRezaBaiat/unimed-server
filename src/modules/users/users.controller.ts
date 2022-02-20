@@ -92,7 +92,7 @@ export class UsersController {
   @Get('/preview')
   public async handleGetPreview (@Query('code') code) {
     return this.usersRepo.crud().where({ type: UserType.DOCTOR, code: Number(code) })
-      .project({ _id: 1, name: 1, imageUrl: 1, code: 1, 'details.response_days': 1, specialization: 1, price: 1 })
+      .project({ _id: 1, name: 1, imageUrl: 1, code: 1, 'details.responseDays': 1, specialization: 1, price: 1 })
       .populate(['specialization'])
       .findOne();
   }
@@ -106,7 +106,7 @@ export class UsersController {
       search,
       searchByMobile: false,
       onlyVisibleDoctors: !search || isNaN(Number(search)),
-      projection: { _id: 1, name: 1, mobile: 1, ready: 1, type: 1, imageUrl: 1, code: 1, 'details.response_days': 1, specialization: 1, price: 1, 'details.reservationInfo': 1, 'details.videoCallAllowed': 1 }
+      projection: { _id: 1, name: 1, mobile: 1, ready: 1, type: 1, imageUrl: 1, code: 1, 'details.responseDays': 1, specialization: 1, price: 1, 'details.reservationInfo': 1, 'details.videoCallAllowed': 1 }
     });
   }
 

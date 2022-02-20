@@ -14,7 +14,7 @@ export class HealthCentersService {
     const users = await this.usersRepo.crud()
       .orWhere({ 'details.clinics': arrayIncludes([ObjectId(centerId)]) })
       .orWhere({ 'details.hospitals': arrayIncludes([ObjectId(centerId)]) })
-      .project({ _id: 1, name: 1, price: 1, imageUrl: 1, code: 1, 'details.response_days': 1 })
+      .project({ _id: 1, name: 1, price: 1, imageUrl: 1, code: 1, 'details.responseDays': 1 })
       .findMany();
 
     const center = await this.healthCentersRepo.crud().withId(centerId).project({ priorities: 1 }).findOne();
@@ -73,13 +73,13 @@ export class HealthCentersService {
     }
     const keys = ['0', '1', '2', '3', '4', '5', '6'];
     const conditions = [];
-    conditions.push({ 'details.response_days.0.healthCenter': id });
-    conditions.push({ 'details.response_days.1.healthCenter': id });
-    conditions.push({ 'details.response_days.2.healthCenter': id });
-    conditions.push({ 'details.response_days.3.healthCenter': id });
-    conditions.push({ 'details.response_days.4.healthCenter': id });
-    conditions.push({ 'details.response_days.5.healthCenter': id });
-    conditions.push({ 'details.response_days.6.healthCenter': id });
+    conditions.push({ 'details.responseDays.0.healthCenter': id });
+    conditions.push({ 'details.responseDays.1.healthCenter': id });
+    conditions.push({ 'details.responseDays.2.healthCenter': id });
+    conditions.push({ 'details.responseDays.3.healthCenter': id });
+    conditions.push({ 'details.responseDays.4.healthCenter': id });
+    conditions.push({ 'details.responseDays.5.healthCenter': id });
+    conditions.push({ 'details.responseDays.6.healthCenter': id });
 
     const users = await this.usersRepo.crud().where({ $or: [...conditions, { 'details.clinics': arrayIncludes([ObjectId(id)]) }, { 'details.hospitals': arrayIncludes([ObjectId(id)]) }] })
       .project({ _id: 1, details: 1 })

@@ -8,13 +8,13 @@ import SearchQuery from './utils/search.query';
 const mongoosePaginate = require('mongoose-paginate-v2');
 
 const pops = [
-  { path: 'details.response_days.0.healthCenter', model: 'healthcenters' },
-  { path: 'details.response_days.1.healthCenter', model: 'healthcenters' },
-  { path: 'details.response_days.2.healthCenter', model: 'healthcenters' },
-  { path: 'details.response_days.3.healthCenter', model: 'healthcenters' },
-  { path: 'details.response_days.4.healthCenter', model: 'healthcenters' },
-  { path: 'details.response_days.5.healthCenter', model: 'healthcenters' },
-  { path: 'details.response_days.6.healthCenter', model: 'healthcenters' }
+  { path: 'details.responseDays.0.healthCenter', model: 'healthcenters' },
+  { path: 'details.responseDays.1.healthCenter', model: 'healthcenters' },
+  { path: 'details.responseDays.2.healthCenter', model: 'healthcenters' },
+  { path: 'details.responseDays.3.healthCenter', model: 'healthcenters' },
+  { path: 'details.responseDays.4.healthCenter', model: 'healthcenters' },
+  { path: 'details.responseDays.5.healthCenter', model: 'healthcenters' },
+  { path: 'details.responseDays.6.healthCenter', model: 'healthcenters' }
 ];
 
 class UserQueryBuilder extends QueryBuilder<User> {
@@ -94,7 +94,7 @@ export default class UsersRepo {
     }
 
     return condition
-      .project(projection || { _id: 1, name: 1, createdAt: 1, mobile: 1, ready: 1, type: 1, imageUrl: 1, code: 1, 'details.response_days': 1, specialization: 1, price: 1 })
+      .project(projection || { _id: 1, name: 1, createdAt: 1, mobile: 1, ready: 1, type: 1, imageUrl: 1, code: 1, 'details.responseDays': 1, specialization: 1, price: 1 })
       .populate(populations || ['specialization'])
       .sort(sort || { createdAt: -1 })
       .skip(skip)
@@ -105,7 +105,7 @@ export default class UsersRepo {
   public async getDoctorCurrentResponseTime (id: string, fromOffset = 0): Promise<ResponseTime> {
     const doctor = await this.crud().withId(id)
       .where({ type: UserType.DOCTOR })
-      .project({ 'details.response_days': 1 })
+      .project({ 'details.responseDays': 1 })
       .findOne();
     // eslint-disable-next-line camelcase
     const { responseDays } = doctor.details;
