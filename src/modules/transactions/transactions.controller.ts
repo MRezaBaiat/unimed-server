@@ -1,7 +1,6 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../guards/jwt.auth.guard';
 import UserId from '../../decorators/userid.decorator';
-import { TransactionsService } from './transactions.service';
 import TransactionsRepo from '../../databases/transactions.repo';
 
 @UseGuards(JwtAuthGuard)

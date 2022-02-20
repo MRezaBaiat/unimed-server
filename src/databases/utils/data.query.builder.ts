@@ -90,6 +90,9 @@ export abstract class DataQueryBuilder<T> {
   public project (
     projection: KeysOf<T, 0 | 1 | any> | { [key: string]: 0 | 1 | any }
   ) {
+    if (!projection) {
+      return this;
+    }
     if (!this._projection) {
       this._projection = {};
     }
