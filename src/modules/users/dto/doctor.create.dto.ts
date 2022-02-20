@@ -119,7 +119,7 @@ class DetailsType {
 
     @IsString()
     @IsOptional()
-      nezam_pezeshki_code:string;
+      nezamPezeshkiCode:string;
 
     @IsNumber()
       cut: number;
