@@ -58,7 +58,7 @@ export default class UsersRepo {
     return this.crud().withId(userId)
       .set({ currency })
       .updateOne();
-  }
+  };
 
   public addWaitingForFinalization = async (userId: string, visitId: string) => {
     return this.crud().withId(userId)
@@ -135,7 +135,8 @@ export default class UsersRepo {
   public removePatientOfNotificationQueue (doctorId: string, patientId: string) {
     return this.crud().withId(doctorId)
       .pull({ notificationQueuePatients: patientId })
-      .updateOne();
+      .updateOne()
+      .exec();
   }
 
   public crud () {
