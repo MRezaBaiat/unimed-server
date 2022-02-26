@@ -37,12 +37,10 @@ export class AdminsAdminController {
       'users',
       'admins',
       'visits',
-      'medicalServices',
       'healthCenters',
       'adminLogs',
       'discounts',
       'serverConfigs',
-      'serviceRequests',
       'specializations',
       'transactions'
     ];
@@ -50,13 +48,10 @@ export class AdminsAdminController {
       users: 'users',
       admins: 'admins',
       visits: 'visits',
-      medicalServices: 'medical_services',
       healthCenters: 'healthcenters',
       adminLogs: 'admin-logs',
-      reservations: 'reservations',
       discounts: 'discount_coupons',
       serverConfigs: 'server_config',
-      serviceRequests: 'service_requests',
       specializations: 'specializations',
       transactions: 'transactions'
     };
