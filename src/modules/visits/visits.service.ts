@@ -17,7 +17,7 @@ import {
 } from 'api/';
 import UsersRepo from '../../databases/users.repo';
 import { ClientsSocketService } from '../socket/clients.socket.service';
-import PushNotificationService, { NOTIFICATION_TYPES } from '../notifications/push.notification.service';
+import PushNotificationService from '../notifications/push.notification.service';
 import PatientPostVisitDto from './dto/patient.post.visit.dto';
 import { ObjectId } from '../../databases/utils';
 import dictionary from '../../utils/dictionary';
@@ -31,6 +31,7 @@ import {
   WebSocketGateway
 } from '@nestjs/websockets/';
 import { TransactionsService } from '../transactions/transactions.service';
+import { PaymentReturnNotification, VisitStartedNotification } from '../notifications/notifications';
 
 @Injectable()
 @WebSocketGateway(7070, { path: '/live', transports: ['websocket'], namespace: '/' })
@@ -236,7 +237,7 @@ export class VisitsService {
 
     await this.usersRepo.removeWaitingForFinalization(visit.doctor._id, visitId);
 
-    await this.notificationsService.sendNotification(visit.patient._id, NOTIFICATION_TYPES.DOCTOR_RETURNED_PAYMENT(visit.doctor.name)).catch(console.error);
+    await this.notificationsService.sendNotification(visit.patient._id, new PaymentReturnNotification(visit.doctor.name)).catch(console.error);
     await this.socketService.sendStatus(visit.doctor._id);
   };
 
@@ -274,7 +275,7 @@ export class VisitsService {
       }
 
       this.socketService.sendStatus(String(visit.patient), String(visit.doctor));
-      this.notificationsService.sendNotification(String(visit.patient), NOTIFICATION_TYPES.VISIT_STARTED);
+      this.notificationsService.sendNotification(String(visit.patient), new VisitStartedNotification());
       this.notifyQueues(String(visit.doctor));
     });
   };

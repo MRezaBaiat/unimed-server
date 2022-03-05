@@ -1,28 +1,9 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
 };
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
@@ -47,7 +28,7 @@ const visits_repo_1 = __importDefault(require("../../databases/visits.repo"));
 const api_1 = require("api/");
 const users_repo_1 = __importDefault(require("../../databases/users.repo"));
 const clients_socket_service_1 = require("../socket/clients.socket.service");
-const push_notification_service_1 = __importStar(require("../notifications/push.notification.service"));
+const push_notification_service_1 = __importDefault(require("../notifications/push.notification.service"));
 const utils_1 = require("../../databases/utils");
 const dictionary_1 = __importDefault(require("../../utils/dictionary"));
 const discounts_service_1 = require("../discounts/discounts.service");
@@ -58,6 +39,7 @@ const javascript_dev_kit_1 = require("javascript-dev-kit");
 const discounts_repo_1 = __importDefault(require("../../databases/discounts.repo"));
 const websockets_1 = require("@nestjs/websockets/");
 const transactions_service_1 = require("../transactions/transactions.service");
+const notifications_1 = require("../notifications/notifications");
 let VisitsService = class VisitsService {
     constructor(lockService, healthCentersRepo, eventsService, discountsRepo, smsService, discountsService, notificationsService, socketService, transactionsService, visitsRepo, usersRepo) {
         this.lockService = lockService;
@@ -247,7 +229,7 @@ let VisitsService = class VisitsService {
                 .set({ 'receipt.return_transaction_id': transaction._id })
                 .updateOne();
             yield this.usersRepo.removeWaitingForFinalization(visit.doctor._id, visitId);
-            yield this.notificationsService.sendNotification(visit.patient._id, push_notification_service_1.NOTIFICATION_TYPES.DOCTOR_RETURNED_PAYMENT(visit.doctor.name)).catch(console.error);
+            yield this.notificationsService.sendNotification(visit.patient._id, new notifications_1.PaymentReturnNotification(visit.doctor.name)).catch(console.error);
             yield this.socketService.sendStatus(visit.doctor._id);
         });
     }
@@ -274,7 +256,7 @@ let VisitsService = class VisitsService {
                 return this.endVisit(visitId, false);
             }
             this.socketService.sendStatus(String(visit.patient), String(visit.doctor));
-            this.notificationsService.sendNotification(String(visit.patient), push_notification_service_1.NOTIFICATION_TYPES.VISIT_STARTED);
+            this.notificationsService.sendNotification(String(visit.patient), new notifications_1.VisitStartedNotification());
             this.notifyQueues(String(visit.doctor));
         }));
     }

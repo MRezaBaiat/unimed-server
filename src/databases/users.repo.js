@@ -161,7 +161,8 @@ let UsersRepo = class UsersRepo {
     removePatientOfNotificationQueue(doctorId, patientId) {
         return this.crud().withId(doctorId)
             .pull({ notificationQueuePatients: patientId })
-            .updateOne();
+            .updateOne()
+            .exec();
     }
     crud() {
         return new UserQueryBuilder(this.usersDB, api_1.User);

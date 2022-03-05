@@ -21,72 +21,43 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.NOTIFICATION_TYPES = void 0;
 const common_1 = require("@nestjs/common");
 const notifications_repo_1 = __importDefault(require("../../databases/notifications.repo"));
 const firebase_admin_1 = __importDefault(require("firebase-admin"));
 const google_services_json_1 = __importDefault(require("./google-services.json"));
 const utils_1 = require("../../databases/utils");
+const users_repo_1 = __importDefault(require("../../databases/users.repo"));
+const notifications_1 = require("./notifications");
+const utils_2 = require("../../utils");
 firebase_admin_1.default.initializeApp({
     credential: firebase_admin_1.default.credential.cert(google_services_json_1.default),
     databaseURL: 'https://unimed.firebaseio.com'
 });
-exports.NOTIFICATION_TYPES = {
-    FREE_TEXT_FNC: (title, body, link) => {
-        return {
-            channelId: 'default',
-            soundName: 'default',
-            title: title,
-            link: link,
-            body: body,
-            ignoreInForeground: false
-        };
-    },
-    NEW_PATIENT: {
-        title: 'یک بیمار جدید در صف انتظار است',
-        channelId: 'patient-in-queue',
-        soundName: 'voice_mode_2.mp3',
-        ignoreInForeground: false
-    },
-    VISIT_STARTED: {
-        title: 'ویزیت شما شروع شد',
-        channelId: 'visit-started',
-        soundName: 'voice_mode_1.mp3',
-        ignoreInForeground: false
-    },
-    RESPONSE_TIME_STARTED: {
-        title: 'وضعیت شما به حالت فعال تغییر کرد',
-        channelId: 'default',
-        soundName: 'default',
-        ignoreInForeground: false
-    },
-    RESPONSE_TIME_ENDED: {
-        title: 'وضعیت شما به حالت غیر فعال تغییر کرد',
-        channelId: 'default',
-        soundName: 'default',
-        ignoreInForeground: false
-    },
-    WORK_TIME_CLOSE: {
-        title: 'با سلام، ساعت کار مطپ شما نزدیک است',
-        channelId: 'default',
-        soundName: 'default',
-        ignoreInForeground: false
-    },
-    DOCTOR_RETURNED_PAYMENT: (doctorName) => {
-        return {
-            title: `هزینه ویزیت شما توسط ${doctorName} بازگشت داده شد`,
-            channelId: 'default',
-            soundName: 'default',
-            ignoreInForeground: false
-        };
-    }
-};
 let PushNotificationService = class PushNotificationService {
-    constructor(notificationsRepo) {
+    constructor(notificationsRepo, usersRepo) {
         this.notificationsRepo = notificationsRepo;
+        this.usersRepo = usersRepo;
     }
     sendNotification(userId, notification, priority = 'high') {
         return __awaiter(this, void 0, void 0, function* () {
+            const user = yield this.usersRepo.crud().withId(userId)
+                .project({ fcmtoken: 1, mobile: 1 })
+                .findOne();
+            if (!user || !user.fcmtoken) {
+                console.log('push notification', 'user not found ' + userId + ' , or he did not have a fcm token set');
+                return;
+            }
+            console.log('push notification', 'sending push');
+            firebase_admin_1.default.messaging().sendToDevice([user.fcmtoken], this.generatePayload(notification, (0, utils_2.findLanguageFromMobile)(user.mobile)), {
+                contentAvailable: true,
+                priority
+            })
+                .then((response) => {
+                console.log('Successfully sent message:', response);
+            })
+                .catch((error) => {
+                console.log('Error sending message:', error);
+            });
         });
     }
     query(skip, limit, search, whiteList) {
@@ -113,8 +84,8 @@ let PushNotificationService = class PushNotificationService {
                 sender: adminId,
                 successCount: 0
             }))._id;
-            const notification = exports.NOTIFICATION_TYPES.FREE_TEXT_FNC(title, body, link);
-            firebase_admin_1.default.messaging().sendToTopic('all-devices', this.generatePayload(notification), {
+            const notification = new notifications_1.GeneralNotification(title, body, link);
+            firebase_admin_1.default.messaging().sendToTopic('all-devices', this.generatePayload(notification, 'fa'), {
                 contentAvailable: true,
                 priority: 'high'
             }).then((response) => {
@@ -137,24 +108,25 @@ let PushNotificationService = class PushNotificationService {
         });
     }
     ;
-    generatePayload(notification) {
+    generatePayload(notification, language) {
+        const props = notification.getNotificationProps(language);
         return {
             notification: {
-                android_channel_id: notification.channelId,
-                title: notification.title,
-                body: notification.body || '',
+                android_channel_id: props.channelId,
+                title: props.title,
+                body: props.body || '',
                 tag: 'Unimed',
-                sound: notification.soundName,
+                sound: props.soundName,
                 badge: '0'
             },
             data: {
                 notification: JSON.stringify({
-                    title: notification.title,
-                    message: notification.body || '',
-                    channelId: notification.channelId,
-                    link: notification.link,
-                    soundName: notification.soundName,
-                    ignoreInForeground: notification.ignoreInForeground,
+                    title: props.title,
+                    message: props.body || '',
+                    channelId: props.channelId,
+                    link: props.link,
+                    soundName: props.soundName,
+                    ignoreInForeground: props.ignoreInForeground,
                     playSound: true,
                     vibrate: true,
                     priority: 'max',
@@ -170,6 +142,6 @@ let PushNotificationService = class PushNotificationService {
 };
 PushNotificationService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [notifications_repo_1.default])
+    __metadata("design:paramtypes", [notifications_repo_1.default, users_repo_1.default])
 ], PushNotificationService);
 exports.default = PushNotificationService;

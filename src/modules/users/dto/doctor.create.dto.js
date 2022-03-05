@@ -141,7 +141,7 @@ __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
-], DetailsType.prototype, "nezam_pezeshki_code", void 0);
+], DetailsType.prototype, "nezamPezeshkiCode", void 0);
 __decorate([
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)

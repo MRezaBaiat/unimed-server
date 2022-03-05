@@ -32,18 +32,12 @@ const discounts_repo_1 = __importDefault(require("../../databases/discounts.repo
 const discount_patch_dto_1 = __importDefault(require("./dto/discount.patch.dto"));
 const id_access_guard_1 = require("../../guards/id.access.guard");
 const whitelist_decorator_1 = __importDefault(require("../../decorators/whitelist.decorator"));
-const dayInMillisec = 24 * 60 * 60 * 1000;
 let DiscountsAdminController = class DiscountsAdminController {
     constructor(discountsService, discountsRepo) {
         this.discountsService = discountsService;
         this.discountsRepo = discountsRepo;
     }
     handleCreate(body) {
-        if (body.start_date !== -1 && body.end_date !== -1) {
-            const days = (body.end_date - body.start_date) / dayInMillisec;
-            body.start_date = new Date().getTime();
-            body.end_date = body.start_date + (dayInMillisec * days);
-        }
         return this.discountsRepo.crud().create(Object.assign(Object.assign({}, body), { usages: [] }));
     }
     handlePatch(body) {

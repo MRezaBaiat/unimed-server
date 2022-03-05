@@ -5,85 +5,27 @@ import serviceAccount from './google-services.json';
 import { Notification, QueryResponse } from 'api';
 import { addWhiteListFilter } from '../../databases/utils';
 import UsersRepo from '../../databases/users.repo';
+import { AbstractNotification, GeneralNotification } from './notifications';
+import { findLanguageFromMobile } from '../../utils';
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount as any),
   databaseURL: 'https://unimed.firebaseio.com'
 });
 
-interface NotificationProps{
-    title: string,
-    body?: string,
-    soundName: 'default' | 'voice_mode_1.mp3' | 'voice_mode_2.mp3' | 'voice_visit_time_ended.mp3',
-    channelId: 'default' | 'visit-started' | 'visit-time-ended' | 'patient-in-queue',
-    link?: string,
-    ignoreInForeground: boolean
-}
-
-export const NOTIFICATION_TYPES = {
-  FREE_TEXT_FNC: (title: string, body: string, link: string): NotificationProps => {
-    return {
-      channelId: 'default',
-      soundName: 'default',
-      title: title,
-      link: link,
-      body: body,
-      ignoreInForeground: false
-    };
-  },
-  NEW_PATIENT: {
-    title: 'یک بیمار جدید در صف انتظار است',
-    channelId: 'patient-in-queue',
-    soundName: 'voice_mode_2.mp3',
-    ignoreInForeground: false
-  } as NotificationProps,
-  VISIT_STARTED: {
-    title: 'ویزیت شما شروع شد',
-    channelId: 'visit-started',
-    soundName: 'voice_mode_1.mp3',
-    ignoreInForeground: false
-  } as NotificationProps,
-  RESPONSE_TIME_STARTED: {
-    title: 'وضعیت شما به حالت فعال تغییر کرد',
-    channelId: 'default',
-    soundName: 'default',
-    ignoreInForeground: false
-  } as NotificationProps,
-  RESPONSE_TIME_ENDED: {
-    title: 'وضعیت شما به حالت غیر فعال تغییر کرد',
-    channelId: 'default',
-    soundName: 'default',
-    ignoreInForeground: false
-  } as NotificationProps,
-  WORK_TIME_CLOSE: {
-    title: 'با سلام، ساعت کار مطپ شما نزدیک است',
-    channelId: 'default',
-    soundName: 'default',
-    ignoreInForeground: false
-  } as NotificationProps,
-  DOCTOR_RETURNED_PAYMENT: (doctorName: string): NotificationProps => {
-    return {
-      title: `هزینه ویزیت شما توسط ${doctorName} بازگشت داده شد`,
-      channelId: 'default',
-      soundName: 'default',
-      ignoreInForeground: false
-    };
-  }
-};
-
 @Injectable()
 export default class PushNotificationService {
   constructor (private notificationsRepo: NotificationsRepo, private usersRepo: UsersRepo) {}
-  public async sendNotification (userId: string, notification: NotificationProps, priority = 'high') {
+  public async sendNotification (userId: string, notification: AbstractNotification, priority = 'high') {
     const user = await this.usersRepo.crud().withId(userId)
-      .project({ fcmtoken: 1 })
+      .project({ fcmtoken: 1, mobile: 1 })
       .findOne();
     if (!user || !user.fcmtoken) {
       console.log('push notification', 'user not found ' + userId + ' , or he did not have a fcm token set');
       return;
     }
     console.log('push notification', 'sending push');
-    admin.messaging().sendToDevice([user.fcmtoken], this.generatePayload(notification), {
+    admin.messaging().sendToDevice([user.fcmtoken], this.generatePayload(notification, findLanguageFromMobile(user.mobile)), {
       contentAvailable: true,
       priority
     })
@@ -116,8 +58,8 @@ export default class PushNotificationService {
       sender: adminId,
       successCount: 0
     }))._id;
-    const notification = NOTIFICATION_TYPES.FREE_TEXT_FNC(title, body, link);
-    admin.messaging().sendToTopic('all-devices', this.generatePayload(notification), {
+    const notification = new GeneralNotification(title, body, link);
+    admin.messaging().sendToTopic('all-devices', this.generatePayload(notification, 'fa'), {
       contentAvailable: true,
       priority: 'high'
     }).then((response: any) => {
@@ -139,24 +81,25 @@ export default class PushNotificationService {
     });
   };
 
-  private generatePayload (notification: NotificationProps): admin.messaging.MessagingPayload {
+  private generatePayload (notification: AbstractNotification, language: 'fa' | 'az'): admin.messaging.MessagingPayload {
+    const props = notification.getNotificationProps(language);
     return {
       notification: {
-        android_channel_id: notification.channelId,
-        title: notification.title,
-        body: notification.body || '',
+        android_channel_id: props.channelId,
+        title: props.title,
+        body: props.body || '',
         tag: 'Unimed',
-        sound: notification.soundName,
+        sound: props.soundName,
         badge: '0'
       },
       data: {
         notification: JSON.stringify({
-          title: notification.title,
-          message: notification.body || '',
-          channelId: notification.channelId,
-          link: notification.link,
-          soundName: notification.soundName,
-          ignoreInForeground: notification.ignoreInForeground,
+          title: props.title,
+          message: props.body || '',
+          channelId: props.channelId,
+          link: props.link,
+          soundName: props.soundName,
+          ignoreInForeground: props.ignoreInForeground,
           playSound: true,
           vibrate: true,
           priority: 'max',

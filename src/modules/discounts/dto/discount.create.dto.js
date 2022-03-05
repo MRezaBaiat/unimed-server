@@ -28,23 +28,23 @@ __decorate([
     __metadata("design:type", Number)
 ], DiscountCreateDto.prototype, "amount", void 0);
 __decorate([
-    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", Number)
-], DiscountCreateDto.prototype, "end_date", void 0);
+    __metadata("design:type", String)
+], DiscountCreateDto.prototype, "startDate", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], DiscountCreateDto.prototype, "endDate", void 0);
 __decorate([
     (0, class_validator_1.IsNumber)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", Number)
-], DiscountCreateDto.prototype, "per_user_limit", void 0);
+], DiscountCreateDto.prototype, "perUserLimit", void 0);
 __decorate([
     (0, class_validator_1.IsNumber)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", Number)
-], DiscountCreateDto.prototype, "start_date", void 0);
-__decorate([
-    (0, class_validator_1.IsNumber)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", Number)
-], DiscountCreateDto.prototype, "total_usage_limit", void 0);
+], DiscountCreateDto.prototype, "totalUsageLimit", void 0);
 exports.default = DiscountCreateDto;

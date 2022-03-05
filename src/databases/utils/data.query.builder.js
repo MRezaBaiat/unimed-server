@@ -73,6 +73,9 @@ class DataQueryBuilder {
         return this;
     }
     project(projection) {
+        if (!projection) {
+            return this;
+        }
         if (!this._projection) {
             this._projection = {};
         }

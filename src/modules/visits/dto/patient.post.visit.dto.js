@@ -16,32 +16,32 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
-], PatientPostVisitDto.prototype, "service_quality", void 0);
+], PatientPostVisitDto.prototype, "serviceQuality", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
-], PatientPostVisitDto.prototype, "video_call_satisfaction", void 0);
+], PatientPostVisitDto.prototype, "videoCallSatisfaction", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
-], PatientPostVisitDto.prototype, "doctor_details_clearity", void 0);
+], PatientPostVisitDto.prototype, "doctorDetailsClearity", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
-], PatientPostVisitDto.prototype, "doctor_solutions", void 0);
+], PatientPostVisitDto.prototype, "doctorSolutions", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
-], PatientPostVisitDto.prototype, "doctor_detailed_consequences", void 0);
+], PatientPostVisitDto.prototype, "doctorDetailedConsequences", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
-], PatientPostVisitDto.prototype, "environment_details", void 0);
+], PatientPostVisitDto.prototype, "environmentDetails", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),

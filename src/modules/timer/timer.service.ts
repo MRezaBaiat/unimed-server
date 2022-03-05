@@ -3,9 +3,10 @@ import UsersRepo from '../../databases/users.repo';
 import { UserType } from 'api';
 import { ClientsSocketService } from '../socket/clients.socket.service';
 import EventsService from '../notifications/events.service';
-import PushNotificationService, { NOTIFICATION_TYPES } from '../notifications/push.notification.service';
+import PushNotificationService from '../notifications/push.notification.service';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { GatewayService } from '../gateway/gateway.service';
+import { DoctorComingOnlineNotification } from '../notifications/notifications';
 
 @Injectable()
 export class TimerService {
@@ -65,7 +66,7 @@ export class TimerService {
                 // @ts-ignore
                 const minutes = Math.round(responseTime.diff / 1000 / 60);
                 notificationQueuePatients.forEach((patientId) => {
-                  this.notificationsService.sendNotification(patientId, NOTIFICATION_TYPES.FREE_TEXT_FNC('', `${doctor.name} تا ${minutes} دقیقه دیگر آنلاین می شوند`, ''));
+                  this.notificationsService.sendNotification(patientId, new DoctorComingOnlineNotification(doctor.name, minutes));
                   this.usersRepo.removePatientOfNotificationQueue(doctor._id, patientId);
                 });
               }

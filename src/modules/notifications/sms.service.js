@@ -36,36 +36,61 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("@nestjs/common");
 const Kavenegar = __importStar(require("kavenegar"));
+const utils_1 = require("../../utils");
+const axios = require('axios');
 let SmsService = class SmsService {
     constructor() {
         this.smsApi = Kavenegar.KavenegarApi({
             apikey: process.env.SMS_API_KEY
         });
     }
-    sendSms(mobile, otp, template) {
+    sendAZSms(mobile, message) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.smsApi.VerifyLookup({
-                token: otp,
-                receptor: mobile,
-                template: template
-            }, (response, status) => {
-                console.log(status);
-                console.log(response);
-            });
+            const login = 'Azdan';
+            const password = '@2Az_/*d@nC02o';
+            const controlid = Math.floor(100000 + Math.random() * 900000);
+            const title = 'Azdan Az Co';
+            const xmlBodyStr = `<?xml version="1.0" encoding="UTF-8"?>
+<request>
+    <head>
+        <operation>submit</operation>
+        <login>${login}</login>
+        <password>${password}</password>
+        <title>${title}</title>
+        <scheduled>now</scheduled>
+        <isbulk>false</isbulk>
+        <controlid>${controlid}</controlid>
+    </head>          
+    <body>
+        <msisdn>${mobile}</msisdn>
+        <message>${message}</message>
+    </body> 
+</request>
+`;
+            axios.post('https://sms.atatexnologiya.az/bulksms/api', xmlBodyStr, {
+                headers: {
+                    'Content-Type': 'text/xml'
+                }
+            }).then(res => console.log(res.data))
+                .catch(console.error);
         });
     }
     sendOTP(mobile, otp) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.sendSms(mobile, otp, 'code');
-        });
-    }
-    sendDirect(mobile, text) {
-        return this.smsApi.Send({
-            message: text,
-            sender: '10004346',
-            receptor: mobile
-        }, (response, status) => {
-            console.log(status);
+            const lang = (0, utils_1.findLanguageFromMobile)(mobile);
+            if (lang === 'fa') {
+                return this.smsApi.VerifyLookup({
+                    token: otp,
+                    receptor: mobile,
+                    template: 'code'
+                }, (response, status) => {
+                    console.log(status);
+                    console.log(response);
+                });
+            }
+            else {
+                return this.sendAZSms(mobile, `UniMed birdəfəlik istifadə kodu: ${otp}`);
+            }
         });
     }
 };
