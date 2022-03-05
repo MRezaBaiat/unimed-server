@@ -1,11 +1,10 @@
 import {
   Body,
   Controller,
-  Get, Head, Header, Headers, Patch,
+  Get, Headers, Patch,
   Post,
   Query, Req,
-  Res, UseGuards,
-  UseInterceptors
+  Res, UseGuards
 } from '@nestjs/common';
 import UserSignInDto from './dto/user.signin.dto';
 import { AuthService } from '../auth/auth.service';
