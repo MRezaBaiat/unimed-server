@@ -47,7 +47,7 @@ export default class SmsService {
       return this.smsApi.VerifyLookup(
         {
           token: otp,
-          receptor: mobile,
+          receptor: mobile.startsWith('98') ? mobile.slice(2, mobile.length) : mobile,
           template: 'code'
         },
         (response, status) => {
