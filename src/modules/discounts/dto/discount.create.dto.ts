@@ -15,17 +15,17 @@ export default class DiscountCreateDto {
 
     @IsString()
     @IsNotEmpty()
-      start_date: string;
+      startDate: string;
 
     @IsString()
     @IsNotEmpty()
-      end_date: string;
+      endDate: string;
 
     @IsNumber()
     @IsNotEmpty()
-      per_user_limit: number;
+      perUserLimit: number;
 
     @IsNumber()
     @IsNotEmpty()
-      total_usage_limit: number;
+      totalUsageLimit: number;
 }
