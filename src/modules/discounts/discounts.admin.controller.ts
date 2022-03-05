@@ -7,8 +7,6 @@ import DiscountPatchDto from './dto/discount.patch.dto';
 import { IdAccessGuard } from '../../guards/id.access.guard';
 import WhiteList from '../../decorators/whitelist.decorator';
 
-const dayInMillisec = 24 * 60 * 60 * 1000;
-
 @UseGuards(AdminJwtAuthGuard)
 @Controller('admin/discounts')
 export default class DiscountsAdminController {
@@ -16,11 +14,6 @@ export default class DiscountsAdminController {
 
   @Post('/')
   public handleCreate (@Body() body: DiscountCreateDto) {
-    if (body.start_date !== -1 && body.end_date !== -1) {
-      const days = (body.end_date - body.start_date) / dayInMillisec;
-      body.start_date = new Date().getTime();
-      body.end_date = body.start_date + (dayInMillisec * days);
-    }
     return this.discountsRepo.crud().create({ ...body, usages: [] });
   }
 

@@ -3,29 +3,29 @@ import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 export default class DiscountCreateDto {
     @IsString()
     @IsNotEmpty()
-    title: string;
+      title: string;
 
     @IsString()
     @IsNotEmpty()
-    code: string;
+      code: string;
 
     @IsNumber()
     @IsNotEmpty()
-    amount: number;
+      amount: number;
+
+    @IsString()
+    @IsNotEmpty()
+      start_date: string;
+
+    @IsString()
+    @IsNotEmpty()
+      end_date: string;
 
     @IsNumber()
     @IsNotEmpty()
-    end_date: number;
+      per_user_limit: number;
 
     @IsNumber()
     @IsNotEmpty()
-    per_user_limit: number;
-
-    @IsNumber()
-    @IsNotEmpty()
-    start_date: number;
-
-    @IsNumber()
-    @IsNotEmpty()
-    total_usage_limit: number;
+      total_usage_limit: number;
 }
