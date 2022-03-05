@@ -42,6 +42,7 @@ export default class SmsService {
   }
 
   public async sendOTP (mobile: string, otp: string) {
+    console.log('sending sms to  ' + mobile);
     const lang = findLanguageFromMobile(mobile);
     if (lang === 'fa') {
       return this.smsApi.VerifyLookup(

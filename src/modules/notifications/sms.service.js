@@ -77,11 +77,12 @@ let SmsService = class SmsService {
     }
     sendOTP(mobile, otp) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log('sending sms to  ' + mobile);
             const lang = (0, utils_1.findLanguageFromMobile)(mobile);
             if (lang === 'fa') {
                 return this.smsApi.VerifyLookup({
                     token: otp,
-                    receptor: mobile,
+                    receptor: mobile.startsWith('98') ? `0${mobile.slice(2, mobile.length)}` : mobile,
                     template: 'code'
                 }, (response, status) => {
                     console.log(status);

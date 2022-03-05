@@ -18,17 +18,17 @@ const services = {
     imageName: 'unimed-adminpanel',
     deploymentName: 'adminpanel-deployment',
     component: 'adminpanel-service',
-    deploymentFile: '/home/rb/Desktop/projects/matap-server-nestjs/k8s/adminpanel-deployment.yaml',
-    root: '/home/rb/Desktop/projects/matap-admin',
-    context: '/home/rb/Desktop/projects/matap-admin'
+    deploymentFile: '~/Desktop/projects/unimed-server/k8s/adminpanel-deployment.yaml',
+    root: '~/Desktop/projects/unimed-admin',
+    context: '~/Desktop/projects/unimed-admin'
   },
   pwa: {
     imageName: 'unimed-pwa',
     deploymentName: 'pwa-deployment',
     component: 'pwa-service',
-    deploymentFile: '/home/rb/Desktop/projects/matap-server-nestjs/k8s/pwa-deployment.yaml',
-    root: '/home/rb/Desktop/projects/matap-aio',
-    context: '/home/rb/Desktop/projects/matap-aio'
+    deploymentFile: '~/Desktop/projects/unimed-server/k8s/pwa-deployment.yaml',
+    root: '~/Desktop/projects/unimed-aio',
+    context: '~/Desktop/projects/unimed-aio'
   }
 };
 // arvan paas patch deployment adminpanel-deployment -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"date\":\"`date +'%s'`\"}}}}}"

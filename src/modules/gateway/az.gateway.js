@@ -13,7 +13,6 @@ class AzGateway {
         this.url = test ? 'https://test.millikart.az:7444/gateway/payment' : 'https://pay.millikart.az/gateway/payment';
     }
     createSignature(amount, description, reference) {
-        console.log(`Mid = ${this.merchantId}; amount = ${amount}; currency = ${this.currency}; description = ${description}; reference = ${reference}; language=az; Secret key = ${this.secretKey}`);
         return crypto.createHash('md5').update(`Mid = ${this.merchantId}; amount = ${amount}; currency = ${this.currency}; description = ${description}; reference = ${reference}; language = az; Secret key = ${this.secretKey}`).digest('hex').toUpperCase();
     }
     createTokenLink(amount, description, reference) {
