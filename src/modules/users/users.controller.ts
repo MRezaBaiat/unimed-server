@@ -52,7 +52,7 @@ export class UsersController {
         await this.usersRepo
           .crud()
           .withId(user._id)
-          .set({ sms_code: otp })
+          .set({ smsCode: otp })
           .updateOne();
         console.log(otp);
         await this.smsService.sendOTP(body.mobile, otp);
@@ -114,7 +114,7 @@ export class UsersController {
   public async handleRenew (@Res() response, @UserId() userId, @Headers('os') os, @Headers('version') version, @Headers('authorization') authorization, @Headers('fcmtoken') fcmtoken) {
     const user = await this.usersRepo.crud().withId(userId)
       .populate(['specialization'])
-      .project({ sms_code: 0, fcmtoken: 0 })
+      .project({ smsCode: 0, fcmtoken: 0 })
       .findOne();
 
     const token = await this.authService.generateAccessToken(user);
@@ -195,7 +195,7 @@ export class UsersController {
       .updateOne();
 
     return this.usersRepo.crud().withId(userId)
-      .project({ fcmtoken: 0, sms_code: 0 })
+      .project({ fcmtoken: 0, smsCode: 0 })
       .populate(['specialization'])
       .findOne();
   }

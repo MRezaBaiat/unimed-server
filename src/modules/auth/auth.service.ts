@@ -51,7 +51,7 @@ export class AuthService {
     }
     const otp = await this.generateOTP(user._id);
     this.smsService.sendOTP(mobile, otp);
-    await this.usersRepo.crud().set({ sms_code: otp }).where({ mobile }).updateOne();
+    await this.usersRepo.crud().set({ smsCode: otp }).where({ mobile }).updateOne();
     return otp;
   }
 
@@ -66,7 +66,7 @@ export class AuthService {
       .crud()
       .withId(id)
       .populate(['specialization'])
-      .project({ sms_code: 0, fcmtoken: 0 })
+      .project({ smsCode: 0, fcmtoken: 0 })
       .findOne();
 
     console.log('otp returning user ', user);
