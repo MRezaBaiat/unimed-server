@@ -11,7 +11,7 @@ export default class SmsService {
 
   private async sendAZSms (mobile: string, message: string) {
     const login = 'Azdan';
-    const password = '@2Az_/*d@nC02o';
+    const password = 'Azd@nC020aZ22';
     const controlid = Math.floor(100000 + Math.random() * 900000);
     const title = 'Azdan Az Co';
 
