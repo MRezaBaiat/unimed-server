@@ -4,6 +4,8 @@ import { QueryResponse, ResponseTime, User, UserType } from 'api';
 import { Document, Model } from 'mongoose';
 import QueryBuilder from './utils/query.builder';
 import SearchQuery from './utils/search.query';
+import SpecializationsRepo, { SpecializationDocument } from './specializations.repo';
+import { ObjectId } from './utils';
 
 const mongoosePaginate = require('mongoose-paginate-v2');
 
@@ -39,7 +41,7 @@ export const UserSchema = SchemaFactory.createForClass(User)
 
 @Injectable()
 export default class UsersRepo {
-  constructor (@InjectModel('users') private usersDB: Model<UserDocument>) {}
+  constructor (@InjectModel('users') private usersDB: Model<UserDocument>, private specializationsRepo: SpecializationsRepo) {}
 
   public setReadyState = async (userId: string, ready: boolean) => {
     return this.crud().withId(userId)
@@ -91,6 +93,10 @@ export default class UsersRepo {
         condition.whereTextLike({ mobile: search }, 'or');
       }
       !isNaN(search as any) && condition.orWhere({ code: Number(search) });
+
+      const specializations = await this.specializationsRepo.crud().whereTextLike({ name: search }).findMany();
+
+      specializations.forEach(s => condition.orWhere({ specialization: ObjectId(s._id) }));
     }
 
     return condition
