@@ -94,7 +94,7 @@ export default class UsersRepo {
       }
       !isNaN(search as any) && condition.orWhere({ code: Number(search) });
 
-      const specializations = await this.specializationsRepo.crud().whereTextLike({ name: search }).findMany();
+      const specializations = await this.specializationsRepo.crud().whereTextLike({ name: search }, 'or').findMany();
 
       specializations.forEach(s => condition.orWhere({ specialization: ObjectId(s._id) }));
     }
